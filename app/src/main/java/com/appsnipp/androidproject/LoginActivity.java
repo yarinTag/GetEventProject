@@ -13,6 +13,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button signInBtn;
     private TextView resetPassword;
 
+    RelativeLayout relativeLayout;
+
     private FirebaseAuth mAuth;
 
     @Override
@@ -44,6 +47,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth=FirebaseAuth.getInstance();
+
+        relativeLayout=findViewById(R.id.includeComponenet);
 
         signInBtn=findViewById(R.id.cirLoginButton);
         editTextEmail=findViewById(R.id.editTextEmail);
@@ -106,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
         resetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                relativeLayout.setVisibility(View.GONE);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 ForgotPasswordFragment passwordFragment = new ForgotPasswordFragment();
                 fragmentManager.beginTransaction().replace(R.id.login_container,passwordFragment).commit();

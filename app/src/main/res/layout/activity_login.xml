@@ -11,6 +11,15 @@
     android:focusableInTouchMode="true"
     android:gravity="center"
     android:layout_gravity="center">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/includeComponenet"
+        tools:context="com.appsnipp.androidproject.LoginActivity"
+        android:background="@color/login_bk_color"
+        android:focusableInTouchMode="true"
+        android:gravity="center"
+        android:layout_gravity="center">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -159,4 +168,5 @@
         android:layout_marginRight="11dp"
         android:layout_marginBottom="30dp"
         android:onClick="onLoginClick"/>
+    </RelativeLayout>
 </RelativeLayout>
