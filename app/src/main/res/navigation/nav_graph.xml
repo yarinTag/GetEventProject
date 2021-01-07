@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragment_event_list">
+    <fragment
+        android:id="@+id/eventListFragment"
+        android:name="com.appsnipp.androidproject.EventListFragment"
+        android:label="EventListFragment" >
+        <argument
+            android:name="eventListSize"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_eventListFragment_to_addEventFragment5"
+            app:destination="@id/addEventFragment5" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEventFragment5"
+        android:name="com.appsnipp.androidproject.AddEventFragment"
+        android:label="AddEventFragment" >
+        <argument
+            android:name="eventList_size"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_addEventFragment5_to_eventListFragment"
+            app:destination="@id/eventListFragment" />
+    </fragment>
+</navigation>
