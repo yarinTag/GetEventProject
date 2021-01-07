@@ -9,13 +9,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 
+import com.appsnipp.androidproject.model.Model;
 import com.appsnipp.androidproject.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,16 +26,18 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.LinkedList;
+import java.util.List;
+
 
 public class RegisterActivity extends AppCompatActivity {
-
+    MyAdapter adapter;
     private EditText newUserFullName;
     private EditText newUserEmail;
     private EditText newUserPhoneNumber;
     private EditText newUserPassword;
     private Button registerBtn;
-
-    private FirebaseAuth mAuth;
+    List<User> userList= new LinkedList<User>();
 
 
     @Override
@@ -40,9 +45,8 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         changeStatusBarColor();
-
-        mAuth = FirebaseAuth.getInstance();
-
+        adapter= new MyAdapter();
+        reloadData();
         newUserFullName=findViewById(R.id.editTextName);
         newUserEmail=findViewById(R.id.editTextEmail);
         newUserPhoneNumber=findViewById(R.id.editTextMobile);
@@ -90,35 +94,16 @@ public class RegisterActivity extends AppCompatActivity {
                     newUserPassword.requestFocus();
                     return;
                 }
+                final User user = new User(userList.size(),fullName,userEmail,userMobile,userPassword);
 
-                mAuth.createUserWithEmailAndPassword(userEmail,userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                Model.instance.addUser(user, new Model.AddUserListener() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            User user = new User(fullName,userEmail,userMobile);
-
-                            FirebaseDatabase.getInstance().getReference("Users").
-                                    child(FirebaseAuth.getInstance().getCurrentUser()
-                                            .getUid()).setValue(user)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-
-                                    if (task.isSuccessful()){
-                                        Log.d("TAG","User has been registered successfully");
-                                        Toast.makeText(RegisterActivity.this, "User has been registered successfully", Toast.LENGTH_SHORT).show();
-                                    }else{
-                                        Toast.makeText(RegisterActivity.this, "Failed to register!! Try again!", Toast.LENGTH_SHORT).show();
-
-                                    }
-                                }
-                            });
-                        }else{
-                            Toast.makeText(RegisterActivity.this, "Failed to register!! Try again!", Toast.LENGTH_SHORT).show();
-
-                        }
+                    public void onComplete() {
                     }
                 });
+
+                reloadData();
+
             }
         });
 
@@ -139,5 +124,49 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
+    class MyAdapter extends BaseAdapter {
 
+        @Override
+        public int getCount() {
+            if(userList==null){
+                return 0;
+            }
+
+            return userList.size();
+        }
+
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View view, ViewGroup parent) {
+            if(view==null ){
+                view = getLayoutInflater().inflate(R.layout.activity_register, null);
+            }
+
+
+            return view;
+        }
+    }
+
+    private void reloadData() {
+        Model.instance.getAllUsers(new Model.GetAllUserListener() {
+            @Override
+            public void onComplete(List<User> data) {
+                for(User u:data) {
+
+                    userList.add(u);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
 }
