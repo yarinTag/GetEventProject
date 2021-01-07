@@ -44,9 +44,9 @@ interface UserDao {
 
 @Entity(tableName = "User")
 public class User implements Serializable {
-        @PrimaryKey(autoGenerate = true)
+        @PrimaryKey
         @NonNull
-        private int userID;
+        private String userID;
     private String fullName;
     private String email;
     private String mobile;
@@ -54,12 +54,11 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(int ID,String fullName, String email, String mobile, String password) {
+    public User(String fullName, String email, String mobile, String password) {
         this.fullName = fullName;
         this.email = email;
         this.mobile = mobile;
-        this.userID=ID;
-        this.password=password;
+
     }
 
     public String getPassword() {
@@ -70,11 +69,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public int getUserID() {
+    public String getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 
@@ -102,10 +101,6 @@ public class User implements Serializable {
         this.mobile = mobile;
     }
 
-    public String getStringID(){
-        String id=""+this.userID;
-        return id;
-    }
 }
 class UserModel {
 
@@ -199,10 +194,7 @@ class UserFirebase {
 
 
     public void getAllUsers(Model.GetAllUserListener listener) {
-        FirebaseAuth db = FirebaseAuth.getInstance();
-
-
-
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     }
 
@@ -247,11 +239,12 @@ class UserFirebase {
     }
 
     public void getUser(String id, Model.GetAllUserListener listener) {
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     }
 
     public void deleteUser(User user, Model.DeleteListener listener) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     }
 }

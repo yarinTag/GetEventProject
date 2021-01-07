@@ -5,8 +5,10 @@ import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 
 import android.os.Bundle;
 import android.util.Patterns;
@@ -31,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editTextPassword;
     private Button signInBtn;
     private TextView resetPassword;
-
+    EventListFragment fragment=new EventListFragment();
     RelativeLayout relativeLayout;
 
     private FirebaseAuth mAuth;
@@ -93,7 +95,9 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                             if (user.isEmailVerified()){
-                                Toast.makeText(LoginActivity.this, "Successful to login! Next Page will be the User Event's Fragment", Toast.LENGTH_SHORT).show();
+                                FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
+                                fragmentTransaction.replace(R.id.login_container,fragment);
+                                fragmentTransaction.commit();
                             }else{
                                 user.sendEmailVerification();
                                 Toast.makeText(LoginActivity.this, "Check your email to verify your account!", Toast.LENGTH_SHORT).show();

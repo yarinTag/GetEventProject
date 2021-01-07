@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.appsnipp.androidproject">
-
     <!-- permission -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -21,12 +20,14 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-
-        <!-- activitys -->
-
         <activity
-            android:name="com.appsnipp.androidproject.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!-- activitys -->
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,11 +35,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.appsnipp.androidproject.RegisterActivity"
+            android:name=".RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <!-- android:windowSoftInputMode="adjustPan" -->
-
-
     </application>
 
 </manifest>

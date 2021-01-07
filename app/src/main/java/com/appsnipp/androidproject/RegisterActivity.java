@@ -1,10 +1,14 @@
 package com.appsnipp.androidproject;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavDeepLinkBuilder;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -24,6 +28,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.LinkedList;
@@ -38,6 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText newUserPassword;
     private Button registerBtn;
     List<User> userList= new LinkedList<User>();
+    EventListFragment fragment=new EventListFragment();
 
 
     @Override
@@ -46,7 +52,6 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         changeStatusBarColor();
         adapter= new MyAdapter();
-        reloadData();
         newUserFullName=findViewById(R.id.editTextName);
         newUserEmail=findViewById(R.id.editTextEmail);
         newUserPhoneNumber=findViewById(R.id.editTextMobile);
@@ -94,15 +99,14 @@ public class RegisterActivity extends AppCompatActivity {
                     newUserPassword.requestFocus();
                     return;
                 }
-                final User user = new User(userList.size(),fullName,userEmail,userMobile,userPassword);
-
+                final User user = new User(fullName,userEmail,userMobile,userPassword);
                 Model.instance.addUser(user, new Model.AddUserListener() {
                     @Override
                     public void onComplete() {
                     }
                 });
 
-                reloadData();
+
 
             }
         });
@@ -157,16 +161,4 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void reloadData() {
-        Model.instance.getAllUsers(new Model.GetAllUserListener() {
-            @Override
-            public void onComplete(List<User> data) {
-                for(User u:data) {
-
-                    userList.add(u);
-                }
-                adapter.notifyDataSetChanged();
-            }
-        });
-    }
 }
