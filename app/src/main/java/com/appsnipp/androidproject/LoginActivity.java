@@ -5,10 +5,9 @@ import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.Navigation;
+
 
 import android.os.Bundle;
 import android.util.Patterns;
@@ -24,6 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.SignInMethodQueryResult;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -95,9 +95,14 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                             if (user.isEmailVerified()){
-                                FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
-                                fragmentTransaction.replace(R.id.login_container,fragment);
-                                fragmentTransaction.commit();
+
+                                Intent intent = new Intent(getBaseContext(), MainActivity.class);
+//                                FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
+//                                fragmentTransaction.replace(R.id.login_container,fragment);
+                                Toast.makeText(LoginActivity.this, "Login in Successfully", Toast.LENGTH_SHORT).show();
+                                startActivity(intent);
+
+                                //fragmentTransaction.commit();
                             }else{
                                 user.sendEmailVerification();
                                 Toast.makeText(LoginActivity.this, "Check your email to verify your account!", Toast.LENGTH_SHORT).show();
@@ -123,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
 
@@ -131,6 +137,7 @@ public class LoginActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
 
     }
+
 
 }
 

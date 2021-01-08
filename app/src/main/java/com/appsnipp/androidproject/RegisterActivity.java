@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.LinkedList;
@@ -42,8 +43,10 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText newUserPhoneNumber;
     private EditText newUserPassword;
     private Button registerBtn;
+    private FirebaseAuth mAuth;
+    boolean flag;
     List<User> userList= new LinkedList<User>();
-    EventListFragment fragment=new EventListFragment();
+//    EventListFragment fragment=new EventListFragment();
 
 
     @Override
@@ -83,6 +86,12 @@ public class RegisterActivity extends AppCompatActivity {
                     newUserEmail.requestFocus();
                     return;
                 }
+//                if (!CheckEmailRegister(userEmail)){
+//                    newUserEmail.setError("Email already present");
+//                    newUserEmail.requestFocus();
+//                    return;
+//                }
+
                 if (userMobile.isEmpty()){
                     newUserPhoneNumber.setError("Phone Number is required");
                     newUserPhoneNumber.requestFocus();
@@ -99,6 +108,9 @@ public class RegisterActivity extends AppCompatActivity {
                     newUserPassword.requestFocus();
                     return;
                 }
+
+
+
                 final User user = new User(fullName,userEmail,userMobile,userPassword);
                 Model.instance.addUser(user, new Model.AddUserListener() {
                     @Override
@@ -106,8 +118,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
 
-
-
+                onLoginClick(view);
             }
         });
 
@@ -156,9 +167,28 @@ public class RegisterActivity extends AppCompatActivity {
                 view = getLayoutInflater().inflate(R.layout.activity_register, null);
             }
 
-
             return view;
         }
+    }
+
+
+    public boolean CheckEmailRegister(String userEmail){
+
+        mAuth.fetchSignInMethodsForEmail(userEmail).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+            @Override
+            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                boolean check = !task.getResult().getSignInMethods().isEmpty();
+
+                if (!check){
+                    flag=true;
+                    //Toast.makeText(getApplicationContext(), "Email not found", Toast.LENGTH_SHORT).show();
+                }else{
+                    //Toast.makeText(getApplicationContext(), "Email already present", Toast.LENGTH_SHORT).show();
+                    flag= false;
+                }
+            }
+        });
+        return flag;
     }
 
 }
