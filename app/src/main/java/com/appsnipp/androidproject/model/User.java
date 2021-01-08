@@ -58,7 +58,7 @@ public class User implements Serializable {
         this.fullName = fullName;
         this.email = email;
         this.mobile = mobile;
-
+        this.password=password;
     }
 
     public String getPassword() {
@@ -222,7 +222,6 @@ class UserFirebase {
                                         Log.d("TAG","User has not been registered");
 
                                     }
-
                                 }
                             });
                 }else{
