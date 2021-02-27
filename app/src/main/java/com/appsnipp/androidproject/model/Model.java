@@ -1,6 +1,8 @@
 package com.appsnipp.androidproject.model;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
+import android.view.View;
+
+import com.appsnipp.androidproject.LoginActivity;
 
 import java.util.List;
 
@@ -9,6 +11,11 @@ public class Model {
     UserFirebase userFirebase= new UserFirebase();
     EventModel eventModel= new EventModel();
     EventFirebase eventFirebase= new EventFirebase();
+
+    public void LoginIn(String email, String password, LoginActivity activity) {
+
+        userFirebase.UserLogIn(email,password,activity);
+    }
 
     //User
     public interface Listener<T>{
@@ -32,6 +39,10 @@ public class Model {
         userFirebase.deleteUser(user,listener);
     }
 
+    public boolean UserIsConnected() {
+        return userFirebase.UserIsConnected();
+    }
+
 
     //Event
 
@@ -46,8 +57,11 @@ public class Model {
         void onComplete();
     }
     public void addEvent(final Event event, AddEventListener listener){
+        EventFirebase eventFirebase= new EventFirebase();
+
         eventFirebase.addEvent(event,listener);
-        eventModel.addEvent(event,listener);
+        listener.onComplete();
+        /*eventModel.addEvent(event,listener);*/
     }
 
     public interface DeleteEventListener extends AddEventListener{}
@@ -59,7 +73,7 @@ public class Model {
         void onComplete();
     }
     public void getEvent(Event event,GetEventListener listener) {
-        eventFirebase.getEvent(event.getEventId(), listener);
+        eventFirebase.getEvent(event.getEventID(), listener);
         eventModel.getEvent(event,listener);
     }
 //    public interface deleteEventListener {

@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appsnipp.androidproject.model.Model;
+import com.appsnipp.androidproject.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -33,10 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editTextPassword;
     private Button signInBtn;
     private TextView resetPassword;
-    EventListFragment fragment=new EventListFragment();
-    RelativeLayout relativeLayout;
-
-    private FirebaseAuth mAuth;
+    private RelativeLayout relativeLayout;
+    private LoginActivity loginActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,14 @@ public class LoginActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_login);
 
-        mAuth=FirebaseAuth.getInstance();
+        loginActivity = this;
+        //If the user has already logged in to the app, doesn't ask them to reconnect
+        if (Model.instance.UserIsConnected()){
+            Intent intent = new Intent(getBaseContext(), MainActivity.class);
+            startActivity(intent);
+        }
+
+
 
         relativeLayout=findViewById(R.id.includeComponenet);
 
@@ -60,59 +68,34 @@ public class LoginActivity extends AppCompatActivity {
 
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 String email = editTextEmail.getText().toString().trim();
                 String password = editTextPassword.getText().toString().trim();
 
-                if(email.isEmpty()){
+                if (email.isEmpty()) {
                     editTextEmail.setError("Email is required!");
                     editTextEmail.requestFocus();
                     return;
                 }
-                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     editTextEmail.setError("Please enter a valid email!");
                     editTextEmail.requestFocus();
                     return;
                 }
-                if (password.isEmpty()){
+                if (password.isEmpty()) {
                     editTextPassword.setError("Password is required!");
                     editTextPassword.requestFocus();
                     return;
                 }
-                if (password.length() < 8){
+                if (password.length() < 8) {
                     editTextPassword.setError("Min password length is 8 characters!");
                     editTextPassword.requestFocus();
                     return;
                 }
 
-                mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        if (task.isSuccessful()){
-
-                            //That means the current logged in user and now we need to check if the user dot is email is verified
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                            if (user.isEmailVerified()){
-
-                                Intent intent = new Intent(getBaseContext(), MainActivity.class);
-//                                FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
-//                                fragmentTransaction.replace(R.id.login_container,fragment);
-                                Toast.makeText(LoginActivity.this, "Login in Successfully", Toast.LENGTH_SHORT).show();
-                                startActivity(intent);
-
-                                //fragmentTransaction.commit();
-                            }else{
-                                user.sendEmailVerification();
-                                Toast.makeText(LoginActivity.this, "Check your email to verify your account!", Toast.LENGTH_SHORT).show();
-                            }
-
-                        }else{
-                            Toast.makeText(LoginActivity.this, "Failed to login! Please check your credentials", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                //That means the current logged in user and now we need to check if the user dot is email is verified
+                Model.instance.LoginIn(email, password,loginActivity);
 
             }
         });
@@ -124,20 +107,32 @@ public class LoginActivity extends AppCompatActivity {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 ForgotPasswordFragment passwordFragment = new ForgotPasswordFragment();
                 fragmentManager.beginTransaction().replace(R.id.login_container,passwordFragment).commit();
-
-
             }
         });
 
     }
 
 
+    public void UserIsConfig(){
+        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+        Toast.makeText(LoginActivity.this, "Login in Successfully", Toast.LENGTH_SHORT).show();
+        startActivity(intent);
+    }
+
+    public void UserIsNotConfig(){
+        Toast.makeText(this, "Check your email to verify your account!", Toast.LENGTH_SHORT).show();
+        Log.d("Tag","Check your email to verify your account!");
+    }
+
+    public void UserNotMatch(){
+        Toast.makeText(this,"Failed to login! Please check your credentials", Toast.LENGTH_SHORT).show();
+    }
+
     public void onLoginClick(View View){
         startActivity(new Intent(this,RegisterActivity.class));
         overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
 
     }
-
 
 }
 

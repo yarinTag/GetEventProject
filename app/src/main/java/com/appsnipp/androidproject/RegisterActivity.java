@@ -1,16 +1,13 @@
 package com.appsnipp.androidproject;
 
-import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavDeepLinkBuilder;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +16,14 @@ import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 
 import com.appsnipp.androidproject.model.Model;
 import com.appsnipp.androidproject.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -45,8 +38,10 @@ public class RegisterActivity extends AppCompatActivity {
     private Button registerBtn;
     private FirebaseAuth mAuth;
     boolean flag;
+
+    ProgressDialog loadingBar;
+
     List<User> userList= new LinkedList<User>();
-//    EventListFragment fragment=new EventListFragment();
 
 
     @Override
@@ -61,6 +56,8 @@ public class RegisterActivity extends AppCompatActivity {
         newUserPassword=findViewById(R.id.editTextPassword);
         registerBtn=findViewById(R.id.cirRegisterButton);
 
+        loadingBar = new ProgressDialog(this);
+
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,6 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
                 final String userEmail = newUserEmail.getText().toString().trim();
                 final String userMobile = newUserPhoneNumber.getText().toString().trim();
                 String userPassword = newUserPassword.getText().toString().trim();
+                final String userImage = "";
 
                 //Validate these inputs
                 if (fullName.isEmpty()){
@@ -92,6 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
 //                    return;
 //                }
 
+
                 if (userMobile.isEmpty()){
                     newUserPhoneNumber.setError("Phone Number is required");
                     newUserPhoneNumber.requestFocus();
@@ -111,8 +110,8 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
-                final User user = new User(fullName,userEmail,userMobile,userPassword);
-                Model.instance.addUser(user, new Model.AddUserListener() {
+    final User user = new User(fullName,userEmail,userMobile,userPassword,userImage);
+                Model.instance.addUser(user,new Model.AddUserListener() {
                     @Override
                     public void onComplete() {
                     }
@@ -172,7 +171,33 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
+
+
+
     public boolean CheckEmailRegister(String userEmail){
+
+//        mAuth = FirebaseAuth.getInstance();
+//        DatabaseReference userRef = (FirebaseDatabase.getInstance().getReference().child("Users"));
+//
+//        final String current_user_id = mAuth.getCurrentUser().getUid();
+//
+//        userRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if (!snapshot.hasChild(current_user_id)){
+//                    newUserEmail.setError("Email already present");
+//                    newUserEmail.requestFocus();
+//                    return;
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+
+        mAuth=FirebaseAuth.getInstance();
 
         mAuth.fetchSignInMethodsForEmail(userEmail).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
             @Override
@@ -189,6 +214,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
         return flag;
+
     }
 
 }

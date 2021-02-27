@@ -6,8 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +17,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,8 +32,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.w3c.dom.Comment;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.content.ContentValues.TAG;
 
 
 @Dao
@@ -56,30 +70,31 @@ interface EventDao {
 public class Event implements Serializable {
     @PrimaryKey
     @NonNull
-    public String eventID;
-    public String EventName;
-    public String EventDetails;
-    public String eventTime;
-    public String EventImg;
-    public int position;
+    private String eventID;
+    private String EventName;
+    private String EventDetails;
+    private String eventTime;
+    private String EventImg;
 
 
     public Event() {
     }
 
-    public Event(String eventName, String eventDate, String eventDescription) {
+    public Event(String eventID,String eventName, String eventDate, String EventDetails,String img) {
         this.EventName=eventName;
+        this.eventID=eventID;
         this.eventTime=eventDate;
-        this.EventDetails=eventDescription;
-
+        this.EventDetails=EventDetails;
+        this.EventImg = img;
     }
 
-    public String getEventId() {
+    @NonNull
+    public String getEventID() {
         return eventID;
     }
 
-    public void setEventId(@NonNull String eventId) {
-        eventId = eventID;
+    public void setEventID(@NonNull String eventID) {
+        this.eventID = eventID;
     }
 
     public String getEventName() {
@@ -112,14 +127,6 @@ public class Event implements Serializable {
 
     public void setEventImg(String eventImg) {
         EventImg = eventImg;
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
     }
 
 
@@ -213,7 +220,7 @@ class EventModel {
         class MyAsyncTask extends AsyncTask {
             @Override
             protected Object doInBackground(Object[] objects) {
-                AppLocalDb.db.eventDao().getEvent(event.getEventId());
+                AppLocalDb.db.eventDao().getEvent(event.getEventID());
                 return null;
             }
 
@@ -233,15 +240,97 @@ class EventModel {
 
 class EventFirebase {
 
+    private FirebaseDatabase database ;
+    private DatabaseReference eventRef;
+    private DatabaseReference userRef;
+
+    public EventFirebase() {
+
+    }
 
     public void getAllEvent(Model.GetAllEventListener listener) {
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+// ...
+        eventRef = database.getInstance().getReference();
+
+        ChildEventListener childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
+
+                // A new comment has been added, add it to the displayed list
+                Comment comment = dataSnapshot.getValue(Comment.class);
+
+                // ...
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.d(TAG, "onChildChanged:" + dataSnapshot.getKey());
+
+                // A comment has changed, use the key to determine if we are displaying this
+                // comment and if so displayed the changed comment.
+                Comment newComment = dataSnapshot.getValue(Comment.class);
+                String commentKey = dataSnapshot.getKey();
+
+                // ...
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onChildRemoved:" + dataSnapshot.getKey());
+
+                // A comment has changed, use the key to determine if we are displaying this
+                // comment and if so remove it.
+                String commentKey = dataSnapshot.getKey();
+
+                // ...
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
+
+                // A comment has changed position, use the key to determine if we are
+                // displaying this comment and if so move it.
+                Comment movedComment = dataSnapshot.getValue(Comment.class);
+                String commentKey = dataSnapshot.getKey();
+
+                // ...
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "postComments:onCancelled", databaseError.toException());
+            }
+        };
+        eventRef.addChildEventListener(childEventListener);
     }
 
+
+    public void addUserToEvent(String eventId,String userId){
+
+
+        database.getReference("Users").child(userId).child("EventList").child(eventId).setValue(eventId);
+
+
+    }
 
 
     public void addEvent(final Event event, Model.AddEventListener listener) {
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        eventRef=database.getReference("EventList");
+        eventRef.child(event.getEventID()).setValue(event);
+
+        addUserToEvent(event.getEventID(),mAuth.getCurrentUser().getUid());
+//        database.getReference("Users").child(mAuth.getCurrentUser().getUid()).child("EventList").child(event.getEventID()).setValue(event.getEventID());
+
+
+
+        listener.onComplete();
+
+
 
     }
 
@@ -305,14 +394,21 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public EventAdapter.OnItemClickListener listener;
-        TextView EventName;
-        LinearLayout backgroundImage;
+        private TextView EventName,userName,eventDescription,eventDate,eventTime;
+        private CircleImageView profileImg;
+        private ImageView eventImg;
+//        private LinearLayout backgroundImage;
         int position;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            EventName = itemView.findViewById(R.id.eventViewName);
-            backgroundImage = itemView.findViewById(R.id.linear_background);
+//            EventName = itemView.findViewById(R.id.eventViewName);
+            userName = itemView.findViewById(R.id.user_profile_name);
+            eventDescription = itemView.findViewById(R.id.event_description);
+            eventDate = itemView.findViewById(R.id.event_date);
+            eventTime = itemView.findViewById(R.id.event_time);
+            profileImg = itemView.findViewById(R.id.event_profile_image);
+            eventImg = itemView.findViewById(R.id.event_img);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -322,9 +418,13 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
         }
 
         public void bindData(Event event, int position) {
-            this.EventName.setText(event.getEventName());
-            this.position = position;
-            this.backgroundImage.setBackgroundResource(getImageBackground(event.getPosition()));
+//            this.userName.setText(event.getEventName());
+            this.eventDescription.setText(event.getEventName());
+            this.eventDate.setText(event.getEventName());
+            this.eventTime.setText(event.getEventName());
+            //need to fill the picture
+//            this.position = position;
+//            this.backgroundImage.setBackgroundResource(getImageBackground(event.getPosition()));
         }
 
         private int getImageBackground(int position) {

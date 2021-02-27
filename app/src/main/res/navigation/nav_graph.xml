@@ -32,4 +32,14 @@
             android:id="@+id/saveActionAddEventFragmentToEventListFragment"
             app:destination="@id/eventListFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/testFragment"
+        android:name="com.appsnipp.androidproject.TestFragment"
+        android:label="fragment_test"
+        tools:layout="@layout/fragment_test" />
+    <fragment
+        android:id="@+id/navigation_home_list"
+        android:name="com.appsnipp.androidproject.Test2Fragment"
+        android:label="fragment_test2"
+        tools:layout="@layout/fragment_test2" />
 </navigation>
