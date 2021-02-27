@@ -1,7 +1,10 @@
 package com.appsnipp.androidproject;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
@@ -52,7 +55,7 @@ public class EventListFragment extends Fragment {
         try {
             if(getArguments()!= null){
                 //try to get data from addEventFragment
-//                EventListFragmentArgs args = EventListFragmentArgs.fromBundle(getArguments());
+                EventListFragmentArgs args = EventListFragmentArgs.fromBundle(getArguments());
                 //add the event into the model
 //                ModelDemo.instance.addEvent(args.getEvent());
                 //refresh the adapter
@@ -86,6 +89,7 @@ public class EventListFragment extends Fragment {
 
         return view;
     }
+
 
     class MyAdapter extends BaseAdapter {
 

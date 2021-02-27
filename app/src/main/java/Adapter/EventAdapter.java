@@ -4,7 +4,7 @@ package Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +14,8 @@ import com.appsnipp.androidproject.R;
 import com.appsnipp.androidproject.model.Event;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
@@ -60,15 +62,23 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public EventAdapter.OnItemClickListener listener;
-        TextView EventName;
-        LinearLayout backgroundImage;
+
+        private EventAdapter.OnItemClickListener listener;
+        private TextView EventName,userName,eventDescription,eventDate,eventTime;
+        private CircleImageView profileImg;
+        private ImageView eventImg;
+        //        private LinearLayout backgroundImage;
         int position;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            EventName = itemView.findViewById(R.id.eventViewName);
-            backgroundImage = itemView.findViewById(R.id.linear_background);
+//            EventName = itemView.findViewById(R.id.eventViewName);
+            userName = itemView.findViewById(R.id.user_profile_name);
+            eventDescription = itemView.findViewById(R.id.event_description);
+            eventDate = itemView.findViewById(R.id.event_date);
+            eventTime = itemView.findViewById(R.id.event_time);
+            profileImg = itemView.findViewById(R.id.event_profile_image);
+            eventImg = itemView.findViewById(R.id.event_img);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -78,13 +88,17 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         }
 
         public void bindData(Event event, int position) {
-            this.EventName.setText(event.getEventName());
-            this.position = position;
-            this.backgroundImage.setBackgroundResource(getImageBackground(event.getPosition()));
+//            this.userName.setText(event.getEventName());
+            this.eventDescription.setText(event.getEventName());
+            this.eventDate.setText(event.getEventName());
+            this.eventTime.setText(event.getEventName());
+            //need to fill the picture
+//            this.position = position;
+//            this.backgroundImage.setBackgroundResource(getImageBackground(event.getPosition()));
         }
 
         private int getImageBackground(int position) {
-            switch (position){
+            switch (position) {
                 case 1:
                     return R.drawable.birthday;
                 case 2:

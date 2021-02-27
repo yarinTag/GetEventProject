@@ -1,5 +1,7 @@
 package com.appsnipp.androidproject.model;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -13,17 +15,14 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.PrimaryKey;
 import androidx.room.Query;
 
-import com.appsnipp.androidproject.RegisterActivity;
+import com.appsnipp.androidproject.LoginActivity;
+import com.appsnipp.androidproject.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -44,21 +43,33 @@ interface UserDao {
 
 @Entity(tableName = "User")
 public class User implements Serializable {
-        @PrimaryKey
+
+    @PrimaryKey
         @NonNull
-        private String userID;
+    private String userID;
     private String fullName;
     private String email;
     private String mobile;
+    private String profileImage;
     private String password;
     public User() {
     }
 
-    public User(String fullName, String email, String mobile, String password) {
+
+    public User(String fullName, String email, String mobile, String password, String image) {
         this.fullName = fullName;
         this.email = email;
         this.mobile = mobile;
+        this.profileImage = image;
         this.password=password;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String image) {
+        this.profileImage = image;
     }
 
     public String getPassword() {
@@ -192,6 +203,21 @@ class UserModel {
 
 class UserFirebase {
 
+    private ProgressDialog loadingBar;
+    private FirebaseAuth mAuth;
+
+    public boolean UserIsConnected(){
+
+
+        //If the user has already logged in to the app, doesn't ask them to reconnect
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            return true;
+
+        }
+        return false;
+    }
 
     public void getAllUsers(Model.GetAllUserListener listener) {
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -202,6 +228,11 @@ class UserFirebase {
 
     public void addUser(final User user, Model.AddUserListener listener) {
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+//        loadingBar.setTitle("Creating New Account");
+//        loadingBar.setMessage("Please wait, while we are creating your new Account. . . ");
+//        loadingBar.show();
+//        loadingBar.setCanceledOnTouchOutside(true);
 
         mAuth.createUserWithEmailAndPassword(user.getEmail(),user.getPassword()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -218,14 +249,21 @@ class UserFirebase {
 
                                     if (task.isSuccessful()){
                                         Log.d("TAG","User has been registered successfully");
+//                                        loadingBar.dismiss();
+//                                        loadingBar.setMessage("Check your Email . . . ");
+//                                        loadingBar.show();
+//                                        loadingBar.setCanceledOnTouchOutside(true);
+//                                        loadingBar.dismiss();
                                     }else{
                                         Log.d("TAG","User has not been registered");
+//                                        loadingBar.dismiss();
 
                                     }
                                 }
                             });
                 }else{
                     Log.d("TAG","User has not been registered");
+//                    loadingBar.dismiss();
 
                 }
             }
@@ -245,6 +283,34 @@ class UserFirebase {
     public void deleteUser(User user, Model.DeleteListener listener) {
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
+    }
+
+    public void UserLogIn(String email, String password, final LoginActivity activity) {
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                if (task.isSuccessful()){
+                    //That means the current logged in user and now we need to check if the user dot is email is verified
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                    if (user.isEmailVerified())
+                    {
+                        activity.UserIsConfig();
+
+                    }else{
+                        user.sendEmailVerification();
+                        activity.UserIsNotConfig();
+                    }
+
+                }else{
+                   activity.UserNotMatch();
+                }
+            }
+        });
     }
 }
 
