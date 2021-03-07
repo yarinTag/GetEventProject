@@ -13,13 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.appsnipp.androidproject.R;
 import com.appsnipp.androidproject.model.Event;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
-    public List<Event> data;
+    public List<Event> data = new ArrayList<>();
     private OnItemClickListener listener;
 
     public EventAdapter() {
@@ -53,10 +54,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
 
-        if (data==null){
-            return 0;
-        }
-
         return data.size();
     }
 
@@ -64,7 +61,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private EventAdapter.OnItemClickListener listener;
-        private TextView EventName,userName,eventDescription,eventDate,eventTime;
+        private TextView eventName,userName,eventDescription,eventDate,eventTime;
         private CircleImageView profileImg;
         private ImageView eventImg;
         //        private LinearLayout backgroundImage;
@@ -72,26 +69,31 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-//            EventName = itemView.findViewById(R.id.eventViewName);
-            userName = itemView.findViewById(R.id.user_profile_name);
+            eventName = itemView.findViewById(R.id.user_profile_name);
+//            userName = itemView.findViewById(R.id.user_profile_name);
             eventDescription = itemView.findViewById(R.id.event_description);
             eventDate = itemView.findViewById(R.id.event_date);
             eventTime = itemView.findViewById(R.id.event_time);
             profileImg = itemView.findViewById(R.id.event_profile_image);
             eventImg = itemView.findViewById(R.id.event_img);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onItemClick(position);
-                }
-            });
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    listener.onItemClick(position);
+//                }
+//            });
         }
 
         public void bindData(Event event, int position) {
 //            this.userName.setText(event.getEventName());
-            this.eventDescription.setText(event.getEventName());
-            this.eventDate.setText(event.getEventName());
-            this.eventTime.setText(event.getEventName());
+            this.eventName.setText(event.getEventName());
+            this.eventDescription.setText(event.getEventDetails());
+            this.eventDate.setText(event.getEventDate());
+            this.eventTime.setText(event.getEventTime());
+
+//            this.eventDescription.setText("ssss");
+//            this.eventDate.setText("sss");
+//            this.eventTime.setText("sss");
             //need to fill the picture
 //            this.position = position;
 //            this.backgroundImage.setBackgroundResource(getImageBackground(event.getPosition()));

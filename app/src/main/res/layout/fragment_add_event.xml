@@ -1,151 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".AddEventFragment">
 
 
-
-<!--    <Spinner-->
-<!--        android:id="@+id/event_subject"-->
-<!--        android:layout_width="137dp"-->
-<!--        android:layout_height="36dp"-->
-<!--        android:layout_marginStart="44dp"-->
-<!--        android:layout_marginTop="48dp"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/addEventDate" />-->
-
-<!--    <TextView-->
-<!--        android:layout_width="155dp"-->
-<!--        android:layout_height="39dp"-->
-<!--        android:layout_marginTop="44dp"-->
-<!--        android:text="Event Subject"-->
-<!--        android:gravity="center"-->
-<!--        android:textColor="@color/black"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.53"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/event_subject"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/addEventDate" />-->
-
-
-<!--    <Button-->
-<!--        android:id="@+id/CancelEventBtn"-->
-<!--        android:layout_width="144dp"-->
-<!--        android:layout_height="44dp"-->
-<!--        android:layout_marginEnd="36dp"-->
-<!--        android:layout_marginBottom="84dp"-->
-<!--        android:text="Cancel"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="1.0"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/SaveEventBtn" />-->
-
-<!--    <Button-->
-<!--        android:id="@+id/SaveEventBtn"-->
-<!--        android:layout_width="146dp"-->
-<!--        android:layout_height="44dp"-->
-<!--        android:layout_marginStart="36dp"-->
-<!--        android:layout_marginBottom="84dp"-->
-<!--        android:text="Save"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent" />-->
-
-<!--    <EditText-->
-<!--        android:id="@+id/addEventDate"-->
-<!--        android:layout_width="335dp"-->
-<!--        android:layout_height="44dp"-->
-<!--        android:layout_marginTop="36dp"-->
-<!--        android:hint="Pick a Date"-->
-<!--        android:inputType=""-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.526"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/addEventDescription" />-->
-
-<!--    <EditText-->
-<!--        android:id="@+id/addEventDescription"-->
-<!--        android:layout_width="335dp"-->
-<!--        android:layout_height="51dp"-->
-<!--        android:layout_marginTop="40dp"-->
-<!--        android:hint="Description"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.526"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/AddEventName" />-->
-
-<!--    <EditText-->
-<!--        android:id="@+id/AddEventName"-->
-<!--        android:layout_width="335dp"-->
-<!--        android:layout_height="38dp"-->
-<!--        android:layout_marginTop="168dp"-->
-<!--        android:hint="Event Name"-->
-<!--        android:inputType="textPersonName"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.526"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-    <RelativeLayout
+    <EditText
+        android:id="@+id/AddEventName"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:hint="Event_Name"
+        android:padding="10dp" />
 
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_below="@+id/AddEventName"
-            android:layout_marginTop="8dp"
-            android:scaleType="centerCrop"
-            android:src="@android:drawable/ic_menu_gallery" />
 
-        <EditText
-            android:id="@+id/addEventDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/imageButton"
-            android:layout_marginTop="39dp"
-            android:hint="Description"
-            android:padding="15dp" />
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="45dp"
+        android:scaleType="centerCrop"
+        android:src="@android:drawable/ic_menu_gallery" />
 
-        <EditText
-            android:id="@+id/AddEventName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="113dp"
-            android:hint="Event_Name"
-            android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/addEventDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageButton"
+        android:layout_marginTop="39dp"
+        android:hint="Description"
+        android:padding="15dp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
 
         <Button
             android:id="@+id/SaveAddEventBtn"
-            android:layout_width="189dp"
-            android:layout_height="66dp"
-            android:layout_below="@+id/addEventDescription"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="11dp"
-            android:layout_marginTop="31dp"
-            android:layout_marginEnd="13dp"
-            android:layout_toStartOf="@+id/CancelAddEventBtn"
-            android:padding="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
             android:text="Post Event" />
 
         <Button
             android:id="@+id/CancelAddEventBtn"
-            android:layout_width="181dp"
-            android:layout_height="64dp"
-            android:layout_below="@+id/addEventDescription"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="29dp"
-            android:layout_marginEnd="18dp"
-            android:padding="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textSize="20sp"
             android:text="Cancel" />
 
 
-    </RelativeLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+</LinearLayout>

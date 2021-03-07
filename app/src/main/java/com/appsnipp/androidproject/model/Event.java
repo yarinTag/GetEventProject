@@ -71,21 +71,23 @@ public class Event implements Serializable {
     @PrimaryKey
     @NonNull
     private String eventID;
-    private String EventName;
-    private String EventDetails;
+    private String eventName;
+    private String eventDetails;
     private String eventTime;
-    private String EventImg;
+    private String eventDate;
+    private String eventImg;
 
 
     public Event() {
     }
 
-    public Event(String eventID,String eventName, String eventDate, String EventDetails,String img) {
-        this.EventName=eventName;
+    public Event(String eventID,String eventName, String eventTime, String eventDetails,String eventImg,String eventDate) {
+        this.eventName=eventName;
         this.eventID=eventID;
-        this.eventTime=eventDate;
-        this.EventDetails=EventDetails;
-        this.EventImg = img;
+        this.eventTime=eventTime;
+        this.eventDetails=eventDetails;
+        this.eventImg = eventImg;
+        this.eventDate = eventDate;
     }
 
     @NonNull
@@ -98,19 +100,27 @@ public class Event implements Serializable {
     }
 
     public String getEventName() {
-        return EventName;
+        return eventName;
+    }
+
+    public String getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(String eventDate) {
+        this.eventDate = eventDate;
     }
 
     public void setEventName(String eventName) {
-        EventName = eventName;
+        this.eventName = eventName;
     }
 
     public String getEventDetails() {
-        return EventDetails;
+        return eventDetails;
     }
 
     public void setEventDetails(String eventDetails) {
-        EventDetails = eventDetails;
+        this.eventDetails = eventDetails;
     }
 
     public String getEventTime() {
@@ -122,189 +132,103 @@ public class Event implements Serializable {
     }
 
     public String getEventImg() {
-        return EventImg;
+        return eventImg;
     }
 
     public void setEventImg(String eventImg) {
-        EventImg = eventImg;
+        this.eventImg = eventImg;
     }
 
 
 }
 
-
-class EventModel {
-
-    public final static EventModel instance = new EventModel();
-    public  List<Event> data = new LinkedList<>();
-
-    EventModel(){
-
-    }
-    public interface GetAllEventListener{
-        void onComplete(List<Event> data);
-    }
-    public void getAllEvents(final Model.GetAllEventListener listener) {
-        class MyAsyncTask extends AsyncTask {
-            List<Event> data=new LinkedList<>();
-
-            @Override
-            public Object doInBackground(Object[] objects) {
-                data = AppLocalDb.db.eventDao().getAll();
-                return data;
-            }
-
-            @Override
-            public void onPostExecute(Object o) {
-                super.onPostExecute(o);
-                listener.onComplete(data);
-            }
-        }
-
-        MyAsyncTask task = new MyAsyncTask();
-        task.execute();
-    }
-
-
-    public interface AddEventListener{
-        void onComplete();
-    }
-    public void addEvent(final Event event, final Model.AddEventListener listener){
-        class MyAsyncTask extends AsyncTask {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                AppLocalDb.db.eventDao().insertAll(event);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                super.onPostExecute(o);
-                if(listener!= null){
-                    listener.onComplete();
-                }
-            }
-        };
-        MyAsyncTask task= new MyAsyncTask();
-        task.execute();
-    }
-
-
-    public interface deleteEventListener{
-        void onComplete();
-    }
-    public void deleteEvent(final Event event, final Model.DeleteListener listener){
-        class MyAsyncTask extends AsyncTask {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                AppLocalDb.db.eventDao().delete(event);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                super.onPostExecute(o);
-                if(listener!= null){
-                    listener.onComplete();
-                }
-            }
-        };
-        MyAsyncTask task= new MyAsyncTask();
-        task.execute();
-    }
-
-    public interface GetEventListener{
-        void onComplete();
-    }
-    public void getEvent(final Event event, final Model.GetEventListener listener){
-        class MyAsyncTask extends AsyncTask {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                AppLocalDb.db.eventDao().getEvent(event.getEventID());
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                super.onPostExecute(o);
-                if(listener!= null){
-                    listener.onComplete();
-                }
-            }
-        };
-        MyAsyncTask task= new MyAsyncTask();
-        task.execute();
-    }
-
-}
 
 class EventFirebase {
 
     private FirebaseDatabase database ;
     private DatabaseReference eventRef;
     private DatabaseReference userRef;
+    private List<Event> eventList = new ArrayList<>();
 
     public EventFirebase() {
 
     }
 
-    public void getAllEvent(Model.GetAllEventListener listener) {
+    public void getAllEvent(final Model.GetAllEventListener listener) {
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 // ...
-        eventRef = database.getInstance().getReference();
+        database = FirebaseDatabase.getInstance();
+        eventRef = database.getReference("EventList");
 
-        ChildEventListener childEventListener = new ChildEventListener() {
+        eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot s: snapshot.getChildren()) {
+                    eventList.add( s.getValue(Event.class));
 
-                // A new comment has been added, add it to the displayed list
-                Comment comment = dataSnapshot.getValue(Comment.class);
+                }
+                listener.onComplete(eventList);
 
-                // ...
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "onChildChanged:" + dataSnapshot.getKey());
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                // A comment has changed, use the key to determine if we are displaying this
-                // comment and if so displayed the changed comment.
-                Comment newComment = dataSnapshot.getValue(Comment.class);
-                String commentKey = dataSnapshot.getKey();
-
-                // ...
             }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onChildRemoved:" + dataSnapshot.getKey());
-
-                // A comment has changed, use the key to determine if we are displaying this
-                // comment and if so remove it.
-                String commentKey = dataSnapshot.getKey();
-
-                // ...
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
-
-                // A comment has changed position, use the key to determine if we are
-                // displaying this comment and if so move it.
-                Comment movedComment = dataSnapshot.getValue(Comment.class);
-                String commentKey = dataSnapshot.getKey();
-
-                // ...
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "postComments:onCancelled", databaseError.toException());
-            }
-        };
-        eventRef.addChildEventListener(childEventListener);
+        });
+//
+//        ChildEventListener childEventListener = new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+//                Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
+//
+//                // A new comment has been added, add it to the displayed list
+//                Comment comment = dataSnapshot.getValue(Comment.class);
+//
+//                // ...
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+//                Log.d(TAG, "onChildChanged:" + dataSnapshot.getKey());
+//
+//                // A comment has changed, use the key to determine if we are displaying this
+//                // comment and if so displayed the changed comment.
+//                Comment newComment = dataSnapshot.getValue(Comment.class);
+//                String commentKey = dataSnapshot.getKey();
+//
+//                // ...
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//                Log.d(TAG, "onChildRemoved:" + dataSnapshot.getKey());
+//
+//                // A comment has changed, use the key to determine if we are displaying this
+//                // comment and if so remove it.
+//                String commentKey = dataSnapshot.getKey();
+//
+//                // ...
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
+//                Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
+//
+//                // A comment has changed position, use the key to determine if we are
+//                // displaying this comment and if so move it.
+//                Comment movedComment = dataSnapshot.getValue(Comment.class);
+//                String commentKey = dataSnapshot.getKey();
+//
+//                // ...
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.w(TAG, "postComments:onCancelled", databaseError.toException());
+//            }
+//        };
+//        eventRef.addChildEventListener(childEventListener);
     }
 
 
@@ -418,7 +342,7 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
         }
 
         public void bindData(Event event, int position) {
-//            this.userName.setText(event.getEventName());
+            this.userName.setText(event.getEventName());
             this.eventDescription.setText(event.getEventName());
             this.eventDate.setText(event.getEventName());
             this.eventTime.setText(event.getEventName());

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/eventListFragment">
-
     <fragment
         android:id="@+id/eventListFragment"
         android:name="com.appsnipp.androidproject.EventListFragment"
@@ -13,33 +12,18 @@
         <action
             android:id="@+id/action_eventListFragment_to_addEventFragment"
             app:destination="@id/addEventFragment" />
-        <argument
-            android:name="event"
-            app:argType="com.appsnipp.androidproject.model.Event" />
     </fragment>
+    <action android:id="@+id/action_global_eventListFragment2" app:destination="@id/eventListFragment" />
     <fragment
         android:id="@+id/addEventFragment"
         android:name="com.appsnipp.androidproject.AddEventFragment"
         android:label="fragment_add_event"
         tools:layout="@layout/fragment_add_event" >
         <action
-            android:id="@+id/cancle_addEventFragment_to_eventListFragment"
+            android:id="@+id/action_addEventFragment_to_eventListFragment"
             app:destination="@id/eventListFragment" />
         <argument
-            android:name="eventListSize"
+            android:name="size"
             app:argType="string" />
-        <action
-            android:id="@+id/saveActionAddEventFragmentToEventListFragment"
-            app:destination="@id/eventListFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/testFragment"
-        android:name="com.appsnipp.androidproject.TestFragment"
-        android:label="fragment_test"
-        tools:layout="@layout/fragment_test" />
-    <fragment
-        android:id="@+id/navigation_home_list"
-        android:name="com.appsnipp.androidproject.Test2Fragment"
-        android:label="fragment_test2"
-        tools:layout="@layout/fragment_test2" />
 </navigation>

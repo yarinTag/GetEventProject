@@ -18,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 
 import com.appsnipp.androidproject.model.Event;
+import com.appsnipp.androidproject.model.EventModel;
 import com.appsnipp.androidproject.model.Model;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -52,19 +53,27 @@ public class EventListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_event_list, container, false);
 
-        try {
-            if(getArguments()!= null){
-                //try to get data from addEventFragment
-                EventListFragmentArgs args = EventListFragmentArgs.fromBundle(getArguments());
-                //add the event into the model
-//                ModelDemo.instance.addEvent(args.getEvent());
-                //refresh the adapter
-                adapter.notifyDataSetChanged();
+//        try {
+//            if(getArguments()!= null){
+//                //try to get data from addEventFragment
+//                EventListFragmentArgs args = EventListFragmentArgs.fromBundle(getArguments());
+//                //add the event into the model
+////                ModelDemo.instance.addEvent(args.getEvent());
+//                //refresh the adapter
+//                adapter.notifyDataSetChanged();
+//            }
+//        }catch (Exception e){}
+
+        EventModel.instance.getAllEvents(new Model.GetAllEventListener() {
+            @Override
+            public void onComplete(List<Event> result) {
+                eventList = result;
             }
-        }catch (Exception e){}
+        });
 
         rv = view.findViewById(R.id.eventListFrag);
-        rv.hasFixedSize();
+//        rv.hasFixedSize();
+        rv.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         rv.setLayoutManager(layoutManager);
@@ -72,9 +81,9 @@ public class EventListFragment extends Fragment {
         adapter = new EventAdapter();
         adapter.data = eventList;
         rv.setAdapter(adapter);
-        if (adapter.getItemCount() != 0 ){
-            reloadData();
-        }
+//        if (adapter.getItemCount() != 0 ){
+//            reloadData();
+//        }
 
         FloatingActionButton fab = view.findViewById(R.id.addEventBtn);
 

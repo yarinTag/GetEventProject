@@ -149,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.mainActivityNavHost);
         //NavigationUI.setupActionBarWithNavController(this,navController);
 
+        navController.navigate(R.id.action_global_eventListFragment2);
+
         bottomNavigationView = findViewById(R.id.navigationView);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 

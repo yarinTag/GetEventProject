@@ -171,7 +171,7 @@ public class AddEventFragment extends Fragment {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.cancle_addEventFragment_to_eventListFragment);
+                Navigation.findNavController(view).popBackStack();
             }
         });
 
@@ -242,7 +242,7 @@ public class AddEventFragment extends Fragment {
 
     private void SavingPostInDataBase(String url) {
 
-        final Event event= new Event(postRandomName+currentUserId,eventName.getText().toString(),saveCurrentDate,eventDescription.getText().toString(),url);
+        final Event event= new Event(postRandomName+currentUserId,eventName.getText().toString(),saveCurrentDate,eventDescription.getText().toString(),url,saveCurrentTime);
         Model.instance.addEvent(event, new Model.AddEventListener() {
             @Override
             public void onComplete() {
