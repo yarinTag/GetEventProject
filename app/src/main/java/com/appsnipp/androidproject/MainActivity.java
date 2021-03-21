@@ -1,13 +1,12 @@
 package com.appsnipp.androidproject;
 
-import android.app.AlertDialog;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -16,17 +15,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.multidex.MultiDex;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 
+import com.appsnipp.androidproject.model.Event;
 import com.appsnipp.androidproject.model.ImageModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -42,6 +41,8 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private Toolbar menuToolbar;
+
+
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
     final static int Gallery_pic =1;
@@ -67,10 +70,12 @@ public class MainActivity extends AppCompatActivity {
     private String currentUserId;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view_drawer);
@@ -152,7 +157,31 @@ public class MainActivity extends AppCompatActivity {
         navController.navigate(R.id.action_global_eventListFragment2);
 
         bottomNavigationView = findViewById(R.id.navigationView);
-        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+
+                switch (item.getItemId()){
+
+                    case R.id.navigation_home:
+                        return  false;
+                    case R.id.participant_event:
+                        break;
+                    case R.id.add_event:
+                        Toast.makeText(MainActivity.this, "fefwefew", Toast.LENGTH_SHORT).show();
+                        navController.navigate(R.id.action_eventListFragment_to_addEventFragment);
+                        return false;
+                    case R.id.event_shopping:
+                        navController.navigate(R.id.action_eventListFragment_to_shoppingListFragment2);
+                        return false;
+                    case R.id.chore_event:
+                        return false;
+                }
+                return false;
+            }
+        });
+//       NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {

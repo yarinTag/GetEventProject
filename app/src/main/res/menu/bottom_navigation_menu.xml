@@ -2,14 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/abc_vector_test"
-        android:title="Home" />
-    <item
-        android:id="@+id/navigation_home_list"
         android:icon="@drawable/ic_baseline_home_24"
-        android:title="Home" />
+        android:title="" />
     <item
-        android:id="@+id/testFragment"
-        android:icon="@drawable/ic_baseline_child_care_24"
-        android:title="Notification" />
+        android:id="@+id/participant_event"
+        android:icon="@drawable/ic_baseline_people_alt_24"
+        android:title="" />
+    <item
+        android:id="@+id/add_event"
+        android:icon="@drawable/ic_baseline_add_circle_24"
+        android:title="" />
+    <item
+        android:id="@+id/event_shopping"
+        android:icon="@drawable/ic_baseline_shopping_cart_24"
+        android:title="" />
+
+    <item
+        android:id="@+id/chore_event"
+        android:icon="@drawable/ic_baseline_list_alt_24"
+        android:title="" />
 </menu>

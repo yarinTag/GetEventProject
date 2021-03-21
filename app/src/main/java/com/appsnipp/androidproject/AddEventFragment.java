@@ -139,26 +139,15 @@ public class AddEventFragment extends Fragment {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Event event1 = new Event();
-//                event1.setEventName(eventName.getText().toString());
-//                event1.setEventDetails(eventDescription.getText().toString());
-//                event1.setEventTime(eventDate.getText().toString());
 
                 ValidateEventInfo();
-
 
                 FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
                 String uid = null;
                 if(user !=null){
                     uid = user.getUid();
                 }
-//                Event event= new Event(uid+receivedSize,eventName.getText().toString(),eventDate.getText().toString(),eventDescription.getText().toString());
-//                Model.instance.addEvent(event, new Model.AddEventListener() {
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
+
                 //move to the eventDetails
 
 //                AddEventFragmentDirections.SaveActionAddEventFragmentToEventListFragment action = AddEventFragmentDirections.saveActionAddEventFragmentToEventListFragment(event);

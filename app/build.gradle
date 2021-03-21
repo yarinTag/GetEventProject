@@ -51,7 +51,4 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:2.1.1'
     implementation 'com.android.support:multidex:2.0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
-
-
-
 }

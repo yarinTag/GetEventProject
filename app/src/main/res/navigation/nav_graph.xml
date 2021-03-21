@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_eventListFragment_to_addEventFragment"
             app:destination="@id/addEventFragment" />
+        <action
+            android:id="@+id/action_eventListFragment_to_shoppingListFragment2"
+            app:destination="@id/shoppingListFragment" />
     </fragment>
     <action android:id="@+id/action_global_eventListFragment2" app:destination="@id/eventListFragment" />
     <fragment
@@ -26,4 +29,9 @@
             android:name="size"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/shoppingListFragment"
+        android:name="com.appsnipp.androidproject.ShoppingListFragment"
+        android:label="fragment_shopping_list"
+        tools:layout="@layout/fragment_shopping_list" />
 </navigation>
