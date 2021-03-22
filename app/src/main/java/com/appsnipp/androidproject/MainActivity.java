@@ -20,12 +20,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 
 import com.appsnipp.androidproject.model.Event;
+import com.appsnipp.androidproject.model.EventFragmentDirections;
 import com.appsnipp.androidproject.model.ImageModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference userRef;
 
     private String currentUserId;
+    public String currentEventId;
+
 
 
 
@@ -173,7 +177,8 @@ public class MainActivity extends AppCompatActivity {
                         navController.navigate(R.id.action_eventListFragment_to_addEventFragment);
                         return false;
                     case R.id.event_shopping:
-                        navController.navigate(R.id.action_eventListFragment_to_shoppingListFragment2);
+                        NavDirections navDirections= EventFragmentDirections.actionEventFragmentToShoppingListFragment(currentEventId);
+                        navController.navigate(navDirections);
                         return false;
                     case R.id.chore_event:
                         return false;
@@ -190,6 +195,22 @@ public class MainActivity extends AppCompatActivity {
 
                 UserMenuSelector(item);
                 return false;
+            }
+        });
+
+        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+            @Override
+            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
+                switch (destination.getId()){
+                    case R.id.eventListFragment:
+                        bottomNavigationView.setVisibility(View.GONE);
+                        return;
+                    case R.id.eventFragment:
+                        bottomNavigationView.setVisibility(View.VISIBLE);
+                        return;
+                    default:
+                        bottomNavigationView.setVisibility(View.VISIBLE);
+                }
             }
         });
 

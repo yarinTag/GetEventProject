@@ -7,6 +7,7 @@ public class Product {
     public String productQuantity;
     public int position;
 
+
     public Product() {
 
     }

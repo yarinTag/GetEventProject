@@ -48,21 +48,11 @@ public class EventListFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_event_list, container, false);
+        final View view =  inflater.inflate(R.layout.fragment_event_list, container, false);
 
-//        try {
-//            if(getArguments()!= null){
-//                //try to get data from addEventFragment
-//                EventListFragmentArgs args = EventListFragmentArgs.fromBundle(getArguments());
-//                //add the event into the model
-////                ModelDemo.instance.addEvent(args.getEvent());
-//                //refresh the adapter
-//                adapter.notifyDataSetChanged();
-//            }
-//        }catch (Exception e){}
 
         EventModel.instance.getAllEvents(new Model.GetAllEventListener() {
             @Override
@@ -75,6 +65,7 @@ public class EventListFragment extends Fragment {
 //        rv.hasFixedSize();
         rv.setHasFixedSize(true);
 
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         rv.setLayoutManager(layoutManager);
 
@@ -85,6 +76,13 @@ public class EventListFragment extends Fragment {
 //            reloadData();
 //        }
 
+        adapter.setOnClickListener(new EventAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                NavDirections navDirections= EventListFragmentDirections.actionEventListFragmentToEventFragment(eventList.get(position));
+                Navigation.findNavController(container).navigate(navDirections);
+            }
+        });
         FloatingActionButton fab = view.findViewById(R.id.addEventBtn);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -100,45 +98,4 @@ public class EventListFragment extends Fragment {
     }
 
 
-    class MyAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            if(eventList==null){
-                return 0;
-            }
-
-            return eventList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View view, ViewGroup parent) {
-            if(view==null ){
-                view = getLayoutInflater().inflate(R.layout.event_row, null);
-            }
-
-            return view;
-        }
-    }
-    private void reloadData() {
-        Model.instance.getAllEvent(new Model.GetAllEventListener() {
-            @Override
-            public void onComplete(List<Event> result) {
-                eventList = result;
-                if (eventList != null){
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        });
-    }
 }

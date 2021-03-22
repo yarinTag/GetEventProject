@@ -176,59 +176,7 @@ class EventFirebase {
 
             }
         });
-//
-//        ChildEventListener childEventListener = new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-//                Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
-//
-//                // A new comment has been added, add it to the displayed list
-//                Comment comment = dataSnapshot.getValue(Comment.class);
-//
-//                // ...
-//            }
-//
-//            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-//                Log.d(TAG, "onChildChanged:" + dataSnapshot.getKey());
-//
-//                // A comment has changed, use the key to determine if we are displaying this
-//                // comment and if so displayed the changed comment.
-//                Comment newComment = dataSnapshot.getValue(Comment.class);
-//                String commentKey = dataSnapshot.getKey();
-//
-//                // ...
-//            }
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                Log.d(TAG, "onChildRemoved:" + dataSnapshot.getKey());
-//
-//                // A comment has changed, use the key to determine if we are displaying this
-//                // comment and if so remove it.
-//                String commentKey = dataSnapshot.getKey();
-//
-//                // ...
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-//                Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
-//
-//                // A comment has changed position, use the key to determine if we are
-//                // displaying this comment and if so move it.
-//                Comment movedComment = dataSnapshot.getValue(Comment.class);
-//                String commentKey = dataSnapshot.getKey();
-//
-//                // ...
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.w(TAG, "postComments:onCancelled", databaseError.toException());
-//            }
-//        };
-//        eventRef.addChildEventListener(childEventListener);
+
     }
 
 
@@ -349,22 +297,6 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
             //need to fill the picture
 //            this.position = position;
 //            this.backgroundImage.setBackgroundResource(getImageBackground(event.getPosition()));
-        }
-
-        private int getImageBackground(int position) {
-            switch (position) {
-                case 1:
-                    return R.drawable.birthday;
-                case 2:
-                    return R.drawable.house_party;
-                case 3:
-                    return R.drawable.sit_in_the_house;
-                case 4:
-                    return R.drawable.party;
-                default:
-                    return R.color.default_active_item_color;
-
-            }
         }
 
     }

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.appsnipp.androidproject.R;
 import com.appsnipp.androidproject.model.Event;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,12 +77,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             eventTime = itemView.findViewById(R.id.event_time);
             profileImg = itemView.findViewById(R.id.event_profile_image);
             eventImg = itemView.findViewById(R.id.event_img);
-//            itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    listener.onItemClick(position);
-//                }
-//            });
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClick(position);
+                }
+            });
         }
 
         public void bindData(Event event, int position) {
@@ -91,28 +92,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             this.eventDate.setText(event.getEventDate());
             this.eventTime.setText(event.getEventTime());
 
-//            this.eventDescription.setText("ssss");
-//            this.eventDate.setText("sss");
-//            this.eventTime.setText("sss");
-            //need to fill the picture
-//            this.position = position;
-//            this.backgroundImage.setBackgroundResource(getImageBackground(event.getPosition()));
-        }
 
-        private int getImageBackground(int position) {
-            switch (position) {
-                case 1:
-                    return R.drawable.birthday;
-                case 2:
-                    return R.drawable.house_party;
-                case 3:
-                    return R.drawable.sit_in_the_house;
-                case 4:
-                    return R.drawable.party;
-                default:
-                    return R.color.default_active_item_color;
+            Picasso.get().load(event.getEventImg()).placeholder(R.drawable.photo).into(eventImg);
 
-            }
+
         }
 
     }

@@ -150,8 +150,8 @@ public class AddEventFragment extends Fragment {
 
                 //move to the eventDetails
 
-//                AddEventFragmentDirections.SaveActionAddEventFragmentToEventListFragment action = AddEventFragmentDirections.saveActionAddEventFragmentToEventListFragment(event);
-//                Navigation.findNavController(v).navigate(action);
+                Navigation.findNavController(v).popBackStack();
+
 
             }
         });
@@ -195,7 +195,7 @@ public class AddEventFragment extends Fragment {
 
         postRandomName = saveCurrentDate+saveCurrentTime;
 
-        ImageModel.uploadImage(imageBitmap, currentUserId, new ImageModel.Listener() {
+        ImageModel.uploadImage(imageBitmap, postRandomName, new ImageModel.Listener() {
             @Override
             public void onSuccess(String url) {
                 SavingPostInDataBase(url);
@@ -208,28 +208,11 @@ public class AddEventFragment extends Fragment {
             }
         });
 
-//        StorageReference eventImagePath = eventImageReference.child("Event Images").child(imageUri.getLastPathSegment() + postRandomName + "jpg");
-//
-//        eventImagePath.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-//                if (task.isSuccessful()) {
-//
-//
-//                    Toast.makeText(getActivity(), "Image uploaded successfully to Storage :)", Toast.LENGTH_SHORT).show();
-//
-//                    SavingPostInDataBase();
-//                }
-//                else {
-//                    String message = task.getException().getMessage();
-//                    Toast.makeText(getActivity(), "Error occured: " + message, Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
+
 
     }
 
-    private void SavingPostInDataBase(String url) {
+    private void SavingPostInDataBase(String url ) {
 
         final Event event= new Event(postRandomName+currentUserId,eventName.getText().toString(),saveCurrentDate,eventDescription.getText().toString(),url,saveCurrentTime);
         Model.instance.addEvent(event, new Model.AddEventListener() {
@@ -239,41 +222,8 @@ public class AddEventFragment extends Fragment {
             }
         });
 
-//        userRef.child(currentUserId).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if (snapshot.exists()){
-//                    String userName = snapshot.child("fullName").getValue().toString();
-//                    String userImage = snapshot.child("profileImage:").getValue().toString();
-//
-//                    HashMap eventsMap = new HashMap();
-//                    eventsMap.put("uid", currentUserId);
-//                    eventsMap.put("date", saveCurrentDate);
-//                    eventsMap.put("time", saveCurrentTime);
-//                    eventsMap.put("description", description);
-//                    eventsMap.put("eventImage", downloadUrl);
-//                    eventsMap.put("fullName", userName);
-//                    eventsMap.put("userImage", userImage);
-//
-//                    eventRef.child(postRandomName).updateChildren(eventsMap).addOnCompleteListener(new OnCompleteListener() {
-//                        @Override
-//                        public void onComplete(@NonNull Task task) {
-//                            if (task.isSuccessful()) {
-//                                Toast.makeText(getContext(), "Event is updated successfully", Toast.LENGTH_SHORT).show();
-//                            }else {
-//                                Toast.makeText(getActivity(), "Error occurred while updating your event", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
+
+
     }
 
     private void PicApic() {

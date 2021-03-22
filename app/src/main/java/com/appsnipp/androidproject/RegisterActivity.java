@@ -176,27 +176,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     public boolean CheckEmailRegister(String userEmail){
 
-//        mAuth = FirebaseAuth.getInstance();
-//        DatabaseReference userRef = (FirebaseDatabase.getInstance().getReference().child("Users"));
-//
-//        final String current_user_id = mAuth.getCurrentUser().getUid();
-//
-//        userRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if (!snapshot.hasChild(current_user_id)){
-//                    newUserEmail.setError("Email already present");
-//                    newUserEmail.requestFocus();
-//                    return;
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
         mAuth=FirebaseAuth.getInstance();
 
         mAuth.fetchSignInMethodsForEmail(userEmail).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
@@ -214,7 +193,5 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
         return flag;
-
     }
-
 }
