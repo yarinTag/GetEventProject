@@ -37,6 +37,9 @@
         <argument
             android:name="eventId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_shoppingListFragment_to_myDialog"
+            app:destination="@id/myDialog" />
     </fragment>
     <fragment
         android:id="@+id/eventFragment"
@@ -50,4 +53,8 @@
             android:id="@+id/action_eventFragment_to_shoppingListFragment"
             app:destination="@id/shoppingListFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/myDialog"
+        android:name="com.appsnipp.androidproject.MyDialog"
+        android:label="MyDialog" />
 </navigation>

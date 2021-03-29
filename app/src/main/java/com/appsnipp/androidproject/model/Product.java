@@ -1,5 +1,9 @@
 package com.appsnipp.androidproject.model;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 public class Product {
 
     public int productId;

@@ -43,6 +43,15 @@
                             <option name="y" value="-429" />
                           </Point>
                         </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_eventFragment_to_shoppingListFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
                       </LayoutPositions>
                     </value>
                   </entry>
@@ -67,12 +76,19 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
-                            <entry key="action_eventListFragment_to_shoppingListFragment2">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
                           </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="myDialog">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="305" />
+                            <option name="y" value="-735" />
+                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -85,6 +101,15 @@
                             <option name="x" value="86" />
                             <option name="y" value="-418" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_shoppingListFragment_to_myDialog">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>

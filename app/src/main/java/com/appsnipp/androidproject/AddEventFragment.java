@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.appsnipp.androidproject.model.Event;
 import com.appsnipp.androidproject.model.ImageModel;
 import com.appsnipp.androidproject.model.Model;
+import com.appsnipp.androidproject.model.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +44,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -66,7 +68,7 @@ public class AddEventFragment extends Fragment {
     private StorageReference eventImageReference;
     private FirebaseAuth mAuth;
     private DatabaseReference userRef,eventRef;
-
+//    private List<Product> productList;
     private String saveCurrentDate, saveCurrentTime,postRandomName,downloadUrl;
 
 

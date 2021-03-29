@@ -28,24 +28,14 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.appsnipp.androidproject.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.w3c.dom.Comment;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static android.content.ContentValues.TAG;
-
 
 @Dao
 interface EventDao {
@@ -76,6 +66,7 @@ public class Event implements Serializable {
     private String eventTime;
     private String eventDate;
     private String eventImg;
+//    private List<Product> productList;
 
 
     public Event() {
@@ -88,6 +79,7 @@ public class Event implements Serializable {
         this.eventDetails=eventDetails;
         this.eventImg = eventImg;
         this.eventDate = eventDate;
+//        this.productList = productList;
     }
 
     @NonNull
@@ -139,7 +131,13 @@ public class Event implements Serializable {
         this.eventImg = eventImg;
     }
 
-
+//    public List<Product> getProductList() {
+//        return productList;
+//    }
+//
+//    public void setProductList(List<Product> productList) {
+//        this.productList = productList;
+//    }
 }
 
 

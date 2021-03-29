@@ -4,14 +4,18 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.appsnipp.androidproject.model.Product;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,9 @@ public class ShoppingListFragment extends Fragment {
    private SearchView searchSV;
    private List<Product> list;
    private ShoppingListAdapter adapter;
+
+   private FloatingActionButton addBtn;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +66,14 @@ public class ShoppingListFragment extends Fragment {
             }
         });
 
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_shoppingListFragment_to_myDialog);
+            }
+        });
+
+
 
         return view;
     }
@@ -77,6 +92,10 @@ public class ShoppingListFragment extends Fragment {
         //adapter
         adapter = new ShoppingListAdapter(getActivity(), list);
         shoppingListRV.setAdapter(adapter);
+
+
+        addBtn = view.findViewById(R.id.addProductBtn);
+
 
 
     }
@@ -98,7 +117,6 @@ public class ShoppingListFragment extends Fragment {
         p1.setProductQuantity(String.valueOf(4));
         list.add(p1);
     }
-
 
 
 }
