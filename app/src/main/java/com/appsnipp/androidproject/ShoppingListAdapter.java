@@ -40,11 +40,14 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
 
         holder.itemTV.setText(product.getProductName());
         holder.quantityTV.setText(product.getProductQuantity());
+        holder.userNameTV.setText(product.userName);
     }
 
     @Override
     public int getItemCount() {
-        return shoppingList.size();
+        if(shoppingList!=null)
+            return shoppingList.size();
+        else return 0;
     }
 
     public void setData(List<Product> list){

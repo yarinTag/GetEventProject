@@ -58,6 +58,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         return data.size();
     }
 
+    public void setList(List<Event> events){
+        data=events;
+        notifyDataSetChanged();
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -77,12 +81,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             eventTime = itemView.findViewById(R.id.event_time);
             profileImg = itemView.findViewById(R.id.event_profile_image);
             eventImg = itemView.findViewById(R.id.event_img);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onItemClick(position);
-                }
-            });
+
         }
 
         public void bindData(Event event, int position) {
@@ -91,7 +90,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             this.eventDescription.setText(event.getEventDetails());
             this.eventDate.setText(event.getEventDate());
             this.eventTime.setText(event.getEventTime());
-
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClick(getAdapterPosition());
+                }
+            });
 
             Picasso.get().load(event.getEventImg()).placeholder(R.drawable.photo).into(eventImg);
 

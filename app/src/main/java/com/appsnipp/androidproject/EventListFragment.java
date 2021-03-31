@@ -18,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 
 import com.appsnipp.androidproject.model.Event;
+import com.appsnipp.androidproject.model.EventFirebase;
 import com.appsnipp.androidproject.model.EventModel;
 import com.appsnipp.androidproject.model.Model;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -54,12 +55,21 @@ public class EventListFragment extends Fragment {
         final View view =  inflater.inflate(R.layout.fragment_event_list, container, false);
 
 
-        EventModel.instance.getAllEvents(new Model.GetAllEventListener() {
+        EventFirebase.instance.getAllEvent(new Model.GetAllEventListener() {
             @Override
             public void onComplete(List<Event> result) {
+
                 eventList = result;
+                adapter.setList(eventList);
             }
         });
+//        EventModel.instance.getAllEvents(new Model.GetAllEventListener() {
+//            @Override
+//            public void onComplete(List<Event> result) {
+//                eventList = result;
+//                adapter.setList(eventList);
+//            }
+//        });
 
         rv = view.findViewById(R.id.eventListFrag);
 //        rv.hasFixedSize();
@@ -70,7 +80,7 @@ public class EventListFragment extends Fragment {
         rv.setLayoutManager(layoutManager);
 
         adapter = new EventAdapter();
-        adapter.data = eventList;
+//        adapter.setList(eventList);
         rv.setAdapter(adapter);
 //        if (adapter.getItemCount() != 0 ){
 //            reloadData();

@@ -10,7 +10,7 @@ public class Model {
     public final static Model instance = new Model();
     UserFirebase userFirebase= new UserFirebase();
     EventModel eventModel= new EventModel();
-    EventFirebase eventFirebase= new EventFirebase();
+
 
     public void LoginIn(String email, String password, LoginActivity activity) {
 
@@ -48,7 +48,7 @@ public class Model {
 
     public interface GetAllEventListener extends Listener<List<Event>>{}
     public void getAllEvent(GetAllEventListener listener) {
-        eventFirebase.getAllEvent(listener);
+     //   EventFirebase.instance.getAllEvent(listener);
         //add from firebase to locoldb
         eventModel.getAllEvents(listener);
     }
@@ -57,23 +57,22 @@ public class Model {
         void onComplete();
     }
     public void addEvent(final Event event, AddEventListener listener){
-        EventFirebase eventFirebase= new EventFirebase();
 
-        eventFirebase.addEvent(event,listener);
+        EventFirebase.instance.addEvent(event,listener);
         listener.onComplete();
         /*eventModel.addEvent(event,listener);*/
     }
 
     public interface DeleteEventListener extends AddEventListener{}
     public void delete(Event event, DeleteListener listener) {
-        eventFirebase.deleteEvent(event,listener);
+        EventFirebase.instance.deleteEvent(event,listener);
     }
 
     public interface GetEventListener {
         void onComplete();
     }
     public void getEvent(Event event,GetEventListener listener) {
-        eventFirebase.getEvent(event.getEventID(), listener);
+        EventFirebase.instance.getEvent(event.getEventID(), listener);
         eventModel.getEvent(event,listener);
     }
 //    public interface deleteEventListener {

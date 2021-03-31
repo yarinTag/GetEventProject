@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String currentUserId;
     public String currentEventId;
+    public String fullName;
 
 
 
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
-                    String fullName = snapshot.child("fullName").getValue().toString();
+                    fullName = snapshot.child("fullName").getValue().toString();
                     String image = snapshot.child("profileImage").getValue().toString();
                     navProfileUserName.setText(fullName);
                     if (!image.equals("")) {

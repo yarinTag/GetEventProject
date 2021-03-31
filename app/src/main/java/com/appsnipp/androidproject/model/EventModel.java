@@ -17,8 +17,7 @@ public class EventModel {
         void onComplete(List<Event> data);
     }
     public void getAllEvents(final Model.GetAllEventListener listener) {
-        EventFirebase eventFirebase = new EventFirebase();
-        eventFirebase.getAllEvent(new Model.GetAllEventListener() {
+        EventFirebase.instance.getAllEvent(new Model.GetAllEventListener() {
             @Override
             public void onComplete(final List<Event> result) {
                  final List<Event> data=result;

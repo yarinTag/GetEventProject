@@ -4,38 +4,53 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Product {
 
-    public int productId;
+
     public String productName;
     public String productQuantity;
-    public int position;
+    public boolean delete=false;
+    public String userName;
 
+
+    public boolean isDelete() {
+        return delete;
+    }
+
+    public void setDelete(boolean delete) {
+        this.delete = delete;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public Product() {
 
     }
 
-    public int getPosition() {
-        return position;
-    }
+    public Product( String productName, String productQuantity, boolean delete, String userName) {
 
-    public Product(String productName, String productQuantity) {
         this.productName = productName;
         this.productQuantity = productQuantity;
+        this.delete = delete;
+        this.userName=userName;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
 
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
 
     public String getProductName() {
         return productName;
@@ -54,3 +69,24 @@ public class Product {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
