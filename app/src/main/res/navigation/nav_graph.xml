@@ -52,6 +52,9 @@
         <action
             android:id="@+id/action_eventFragment_to_shoppingListFragment"
             app:destination="@id/shoppingListFragment" />
+        <action
+            android:id="@+id/action_eventFragment_to_eventListFragment2"
+            app:destination="@id/eventListFragment" />
     </fragment>
     <dialog
         android:id="@+id/myDialog"

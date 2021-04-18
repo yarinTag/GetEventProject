@@ -19,10 +19,12 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 
@@ -73,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     public String currentEventId;
     public String fullName;
 
-
+   private String currentFragment = "";
 
 
     @Override
@@ -166,22 +168,42 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-
                 switch (item.getItemId()){
 
                     case R.id.navigation_home:
+                        if(!currentFragment.equals("navigation_home")){
+                            currentFragment = "navigation_home";
+                            //NavDirection
+                            NavDirections navDirections= EventFragmentDirections.actionEventFragmentToEventListFragment2();
+                            navController.navigate(navDirections);
+                        }
                         return  false;
                     case R.id.participant_event:
+                        if(!currentFragment.equals("participant_event")){
+                            currentFragment = "participant_event";
+                            //NavDirection
+                        }
                         break;
                     case R.id.add_event:
                         Toast.makeText(MainActivity.this, "fefwefew", Toast.LENGTH_SHORT).show();
-                        navController.navigate(R.id.action_eventListFragment_to_addEventFragment);
+                        if (!currentFragment.equals("add_text")){
+                            currentFragment = "add_text";
+//                            navController.navigate(R.id.action_eventListFragment_to_addEventFragment);
+                        }
+
                         return false;
                     case R.id.event_shopping:
-                        NavDirections navDirections= EventFragmentDirections.actionEventFragmentToShoppingListFragment(currentEventId);
-                        navController.navigate(navDirections);
+                        if(!currentFragment.equals("event_shopping")){
+                            currentFragment = "event_shopping";
+                            NavDirections navDirections= EventFragmentDirections.actionEventFragmentToShoppingListFragment(currentEventId);
+                            navController.navigate(navDirections);
+                            }
                         return false;
                     case R.id.chore_event:
+                        if(!currentFragment.equals("chore_event")){
+                            currentFragment = "chore_event";
+                            //NavDirection
+                        }
                         return false;
                 }
                 return false;
