@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -41,8 +42,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 @Dao
 interface EventDao {
 
-    @Query("select * from Event")
-    List<Event> getAll();
+    @Query("select * from Event ORDER BY eventTime,eventDate ")
+    LiveData<List<Event>> getAll();
 
     @Insert(onConflict= OnConflictStrategy.REPLACE)
     void insertAll(Event...events);
@@ -67,19 +68,29 @@ public class Event implements Serializable {
     private String eventTime;
     private String eventDate;
     private String eventImg;
+    private String userImg;
 
 
 
     public Event() {
     }
 
-    public Event(String eventID,String eventName, String eventTime, String eventDetails,String eventImg,String eventDate) {
+    public String getUserImg() {
+        return userImg;
+    }
+
+    public void setUserImg(String userImg) {
+        this.userImg = userImg;
+    }
+
+    public Event(String eventID, String eventName, String eventTime, String eventDetails, String eventImg, String eventDate,String userImg) {
         this.eventName=eventName;
         this.eventID=eventID;
         this.eventTime=eventTime;
         this.eventDetails=eventDetails;
         this.eventImg = eventImg;
         this.eventDate = eventDate;
+        this.userImg = userImg;
     }
 
     @NonNull

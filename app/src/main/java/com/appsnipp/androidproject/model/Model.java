@@ -2,6 +2,8 @@ package com.appsnipp.androidproject.model;
 
 import android.view.View;
 
+import androidx.lifecycle.LiveData;
+
 import com.appsnipp.androidproject.LoginActivity;
 
 import java.util.List;
@@ -15,6 +17,21 @@ public class Model {
     public void LoginIn(String email, String password, LoginActivity activity) {
 
         userFirebase.UserLogIn(email,password,activity);
+    }
+
+    public interface RefreshEventListener{
+        void onComplete();
+    }
+
+    public void RefreshMyEvent(final RefreshEventListener listener) {
+
+        eventModel.refreshMyEvents(new EventModel.GetAllEventListener() {
+            @Override
+            public void onComplete() {
+                listener.onComplete();
+            }
+
+        });
     }
 
     //User
@@ -49,12 +66,18 @@ public class Model {
     public interface GetAllEventListener {
         void onComplete(List<Event> data);
     }
-    public void getAllEvent(final GetAllEventListener listener) {
+    public void getAllEvent(final EventModel.GetAllLiveDataListener listener) {
 
         //add from firebase to locoldb
-        eventModel.getAllEvents(new EventModel.GetAllEventListener() {
+//        eventModel.getAllEvents(new EventModel.GetAllEventListener() {
+//            @Override
+//            public void onComplete(List<Event> data) {
+//                listener.onComplete(data);
+//            }
+//        });
+        eventModel.getAllEvents(new EventModel.GetAllLiveDataListener() {
             @Override
-            public void onComplete(List<Event> data) {
+            public void onComplete(LiveData<List<Event>> data) {
                 listener.onComplete(data);
             }
         });
@@ -65,11 +88,14 @@ public class Model {
     public interface AddEventListener{
         void onComplete();
     }
-    public void addEvent(final Event event, AddEventListener listener){
+    public void addEvent(final Event event, final AddEventListener listener){
 
-        EventFirebase.instance.addEvent(event,listener);
-        listener.onComplete();
-        /*eventModel.addEvent(event,listener);*/
+        eventModel.addEvent(event, new AddEventListener() {
+            @Override
+            public void onComplete() {
+                listener.onComplete();
+            }
+        });
     }
 
     public interface DeleteEventListener extends AddEventListener{}

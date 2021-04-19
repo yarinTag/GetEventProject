@@ -26,26 +26,16 @@ import android.widget.Toast;
 import com.appsnipp.androidproject.model.Event;
 import com.appsnipp.androidproject.model.ImageModel;
 import com.appsnipp.androidproject.model.Model;
-import com.appsnipp.androidproject.model.Product;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -72,10 +62,16 @@ public class AddEventFragment extends Fragment {
     private DatabaseReference userRef,eventRef;
 //    private List<Product> productList;
     private String saveCurrentDate, saveCurrentTime,postRandomName,downloadUrl;
-
+    View view;
 
     String[] subject = {" ","birthday","house Party","sit In The House","party"};
     private static final int Gallery_pic =1;
+
+    public interface savePostListener{
+        void onComplete(boolean ifSave);
+    }
+
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -101,7 +97,7 @@ public class AddEventFragment extends Fragment {
         userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
         eventRef = FirebaseDatabase.getInstance().getReference().child("Events");
 
-        View view = inflater.inflate(R.layout.fragment_add_event, container, false);
+        view = inflater.inflate(R.layout.fragment_add_event, container, false);
 //        spinnerEvent = view.findViewById(R.id.event_subject);
 //        spinnerEvent.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 //            @Override
@@ -151,21 +147,16 @@ public class AddEventFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (ValidateEventInfo()) {
-                    FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
-                    String uid = null;
-                    if(user !=null){
-                        uid = user.getUid();
+                ValidateEventInfo(new savePostListener() {
+                    @Override
+                    public void onComplete(boolean ifSave) {
+                        if(ifSave) {
+                            //move to the eventDetails
+                            Navigation.findNavController(view).popBackStack();
+
+                        }
                     }
-
-                    //move to the eventDetails
-
-                    Navigation.findNavController(v).popBackStack();
-
-                }
-
-
-
+                });
 
             }
         });
@@ -181,31 +172,38 @@ public class AddEventFragment extends Fragment {
         return view;
     }
 
-    private boolean ValidateEventInfo() {
+    private void ValidateEventInfo(final savePostListener listener) {
 
         description = eventDescription.getText().toString();
         nameEvent = eventName.getText().toString();
 
         if (imageBitmap == null) {
             Toast.makeText(parent, "Please select Event image !!", Toast.LENGTH_SHORT).show();
-            return false;
+            listener.onComplete(false);
         }
         if (TextUtils.isEmpty(description)) {
             Toast.makeText(parent, "Please fill the description box !!", Toast.LENGTH_SHORT).show();
             eventDescription.setError("Please fill the description box");
-            return false;
+            listener.onComplete(false);
         }
         if (TextUtils.isEmpty(nameEvent)) {
             Toast.makeText(parent, "Please choose event name !!", Toast.LENGTH_SHORT).show();
-            return false;
+            listener.onComplete(false);
         }
 
-            StoringImageToFireBaseStorage();
-        return true;
+            StoringImageToFireBaseStorage(new savePostListener() {
+                @Override
+                public void onComplete(boolean ifSave) {
+                    listener.onComplete(true);
+                }
+
+
+            });
+
 
     }
 
-    private void StoringImageToFireBaseStorage() {
+    private void StoringImageToFireBaseStorage(final savePostListener listener) {
 
         Calendar forDate = Calendar.getInstance();
         SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
@@ -220,7 +218,14 @@ public class AddEventFragment extends Fragment {
         ImageModel.uploadImage(imageBitmap, postRandomName, new ImageModel.Listener() {
             @Override
             public void onSuccess(String url) {
-                SavingPostInDataBase(url);
+                SavingPostInDataBase(url, new savePostListener() {
+                    @Override
+                    public void onComplete(boolean ifSave) {
+                        listener.onComplete(false);
+
+                    }
+
+                });
 //                        loadingBar.hide();
             }
 
@@ -230,21 +235,19 @@ public class AddEventFragment extends Fragment {
             }
         });
 
-
-
     }
 
-    private void SavingPostInDataBase(String url ) {
 
-        final Event event= new Event(postRandomName+currentUserId,eventName.getText().toString(),saveCurrentDate,eventDescription.getText().toString(),url,saveCurrentTime);
+    private void SavingPostInDataBase(String url , final savePostListener listener ) {
+
+        final Event event= new Event(postRandomName+currentUserId,eventName.getText().toString(),saveCurrentDate,eventDescription.getText().toString(),url,saveCurrentTime,parent.image);
         Model.instance.addEvent(event, new Model.AddEventListener() {
             @Override
             public void onComplete() {
                 Toast.makeText(parent, "Event is updated successfully", Toast.LENGTH_SHORT).show();
+                listener.onComplete(true);
             }
         });
-
-
 
     }
 

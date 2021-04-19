@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
+import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -18,9 +19,13 @@ public class EventModel {
 
     }
     public interface GetAllEventListener{
-        void onComplete(List<Event> data);
+        void onComplete();
     }
-    public void getAllEvents(final GetAllEventListener listener) {
+
+    public interface GetAllLiveDataListener{
+        void onComplete(LiveData<List<Event>> data);
+    }
+    public void refreshMyEvents(final GetAllEventListener listener) {
         EventFirebase.instance.getAllEvent(new Model.GetAllEventListener() {
             @Override
             public void onComplete(final List<Event> result) {
@@ -30,9 +35,9 @@ public class EventModel {
                     protected Object doInBackground(Object[] objects) {
 //                        AppLocalDb.db.eventDao().insertAll((Event) data);
 //                        data.forEach( e ->AppLocalDb.db.eventDao().insertAll( (e));
-//                        for(Event e : data) {
-//                            AppLocalDb.db.eventDao().insertAll((e));
-//                        }
+                        for(Event e : data) {
+                            AppLocalDb.db.eventDao().insertAll((e));
+                        }
                         return null;
                     }
 
@@ -40,7 +45,9 @@ public class EventModel {
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
 
-                        listener.onComplete( data);
+                        if(listener!=null) {
+                            listener.onComplete();
+                        }
                     }
                 }
 
@@ -51,11 +58,22 @@ public class EventModel {
 
     }
 
+    public void getAllEvents(final GetAllLiveDataListener listener) {
+
+        LiveData<List<Event>> liveData = (LiveData<List<Event>>) AppLocalDb.db.eventDao().getAll();
+        refreshMyEvents(null);
+        listener.onComplete(liveData);
+    }
+
 
     public interface AddEventListener{
         void onComplete();
     }
     public void addEvent(final Event event, final Model.AddEventListener listener){
+        EventFirebase.instance.addEvent(event, new Model.AddEventListener() {
+            @Override
+            public void onComplete() {
+
         class MyAsyncTask extends AsyncTask {
             @Override
             protected Object doInBackground(Object[] objects) {
@@ -73,6 +91,8 @@ public class EventModel {
         };
         MyAsyncTask task= new MyAsyncTask();
         task.execute();
+            }
+        });
     }
 
 

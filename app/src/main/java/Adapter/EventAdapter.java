@@ -82,6 +82,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             profileImg = itemView.findViewById(R.id.event_profile_image);
             eventImg = itemView.findViewById(R.id.event_img);
 
+
         }
 
         public void bindData(Event event, int position) {
@@ -97,7 +98,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 }
             });
 
+
             Picasso.get().load(event.getEventImg()).placeholder(R.drawable.photo).into(eventImg);
+            Picasso.get().load(event.getUserImg()).placeholder(R.drawable.photo).into(profileImg);
+
 
 
         }

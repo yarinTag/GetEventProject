@@ -74,8 +74,10 @@ public class MainActivity extends AppCompatActivity {
     private String currentUserId;
     public String currentEventId;
     public String fullName;
+    public String image ="";
 
-   private String currentFragment = "";
+
+    private String currentFragment = "";
 
 
     @Override
@@ -100,26 +102,26 @@ public class MainActivity extends AppCompatActivity {
         loadingBar = new ProgressDialog(this);
 
 
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String image ="";
                 if (snapshot.exists()){
                     fullName = snapshot.child("fullName").getValue().toString();
                     if (snapshot.child("profileImage").getValue() != null) {
 
                         image = snapshot.child("profileImage").getValue().toString();
+                        navProfileUserName.setText(fullName);
+                        if (!image.equals("")) {
+                            Picasso.get().load(image).placeholder(R.drawable.photo).into(navProfileUserImage);
+                        }
                     }
-                    navProfileUserName.setText(fullName);
-                    if (!image.equals("")) {
-                        Picasso.get().load(image).placeholder(R.drawable.photo).into(navProfileUserImage);
-                    }
+
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(MainActivity.this, "Fucked up", Toast.LENGTH_SHORT).show();
             }
         });
 
