@@ -60,4 +60,8 @@
         android:id="@+id/myDialog"
         android:name="com.appsnipp.androidproject.MyDialog"
         android:label="MyDialog" />
+    <fragment
+        android:id="@+id/myEventListFragment"
+        android:name="com.appsnipp.androidproject.MyEventListFragment"
+        android:label="MyEventListFragment" /><action android:id="@+id/action_global_myEventListFragment" app:destination="@id/myEventListFragment"/>
 </navigation>

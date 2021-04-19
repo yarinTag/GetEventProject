@@ -2,9 +2,11 @@ package com.appsnipp.androidproject;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -15,17 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-
 import com.appsnipp.androidproject.model.Event;
-import com.appsnipp.androidproject.model.EventFirebase;
 import com.appsnipp.androidproject.model.EventModel;
 import com.appsnipp.androidproject.model.EventViewModel;
-import com.appsnipp.androidproject.model.Model;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.LinkedList;
@@ -34,7 +28,7 @@ import java.util.List;
 import Adapter.EventAdapter;
 
 
-public class EventListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class MyEventListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
 
     private RecyclerView rv;
@@ -61,7 +55,7 @@ public class EventListFragment extends Fragment implements SwipeRefreshLayout.On
         void onItemClickEvent(Event event);
     }
 
-    public EventListFragment() {
+    public MyEventListFragment() {
         // Required empty public constructor
     }
 
@@ -80,7 +74,7 @@ public class EventListFragment extends Fragment implements SwipeRefreshLayout.On
         refreshLayout = view.findViewById(R.id.refresh);
         refreshLayout.setOnRefreshListener(this);
 
-        viewModel.getData(new EventModel.GetAllLiveDataListener() {
+        viewModel.getUserData(new EventModel.GetAllLiveDataListener() {
             @Override
             public void onComplete(LiveData<List<Event>> data) {
                 liveData = data;
@@ -95,17 +89,6 @@ public class EventListFragment extends Fragment implements SwipeRefreshLayout.On
             }
         });
 
-
-
-//        Model.instance.getAllEvent(new Model.GetAllEventListener() {
-//            @Override
-//            public void onComplete(List<Event> result) {
-//
-//                eventList = result;
-//                adapter.setList(eventList);
-//            }
-//        });
-
         rv = view.findViewById(R.id.eventListFrag);
 //        rv.hasFixedSize();
         rv.setHasFixedSize(true);
@@ -115,16 +98,13 @@ public class EventListFragment extends Fragment implements SwipeRefreshLayout.On
         rv.setLayoutManager(layoutManager);
 
         adapter = new EventAdapter();
-//        adapter.setList(eventList);
         rv.setAdapter(adapter);
-//        if (adapter.getItemCount() != 0 ){
-//            reloadData();
-//        }
+
 
         adapter.setOnClickListener(new EventAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                NavDirections navDirections= EventListFragmentDirections.actionEventListFragmentToEventFragment(eventList.get(position));
+                NavDirections navDirections= MyEventListFragmentDirections.actionGlobalMyEventListFragment();
                 Navigation.findNavController(container).navigate(navDirections);
             }
         });

@@ -13,6 +13,11 @@
                       <LayoutPositions />
                     </value>
                   </entry>
+                  <entry key="action_global_myEventListFragment">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
                   <entry key="addEventFragment">
                     <value>
                       <LayoutPositions>
@@ -45,6 +50,11 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_eventFragment_to_eventListFragment2">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_eventFragment_to_shoppingListFragment">
                               <value>
                                 <LayoutPositions />
@@ -88,6 +98,18 @@
                           <Point>
                             <option name="x" value="305" />
                             <option name="y" value="-735" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="myEventListFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-328" />
+                            <option name="y" value="-543" />
                           </Point>
                         </option>
                       </LayoutPositions>

@@ -12,6 +12,7 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -23,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.appsnipp.androidproject.model.EventViewModel;
 import com.appsnipp.androidproject.model.Product;
 import com.appsnipp.androidproject.model.ProductFireBase;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -30,7 +32,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShoppingListFragment extends Fragment {
+public class ShoppingListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
    private RecyclerView shoppingListRV;
    private SearchView searchSV;
@@ -38,6 +40,8 @@ public class ShoppingListFragment extends Fragment {
    private ShoppingListAdapter adapter;
    private FloatingActionButton addBtn;
    public MainActivity mainActivity;
+    SwipeRefreshLayout refreshLayout ;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,6 +54,7 @@ public class ShoppingListFragment extends Fragment {
 
         shoppingListRV.setHasFixedSize(true);
         shoppingListRV.setLayoutManager(new LinearLayoutManager(getActivity()));
+        refreshLayout = view.findViewById(R.id.refresh);
 
 //        initData();
 
@@ -233,5 +238,17 @@ public class ShoppingListFragment extends Fragment {
         list.add(p1);
     }
 
+
+    @Override
+    public void onRefresh() {
+
+        refreshLayout.setRefreshing(true);
+//        viewModel.refresh(new EventViewModel.RefreshEventListener() {
+//            @Override
+//            public void onComplete() {
+//                refreshLayout.setRefreshing(false);
+//            }
+//        });}
+    }
 
 }

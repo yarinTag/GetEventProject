@@ -20,13 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appsnipp.androidproject.model.Model;
-import com.appsnipp.androidproject.model.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.SignInMethodQueryResult;
+
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -51,10 +45,17 @@ public class LoginActivity extends AppCompatActivity {
 
         loginActivity = this;
         //If the user has already logged in to the app, doesn't ask them to reconnect
-        if (Model.instance.UserIsConnected()){
-            Intent intent = new Intent(getBaseContext(), MainActivity.class);
-            startActivity(intent);
-        }
+         Model.instance.UserIsConnected(new Model.isConnectedListener() {
+            @Override
+            public void onComplete(boolean flag) {
+                if(flag) {
+                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+
 
 
 

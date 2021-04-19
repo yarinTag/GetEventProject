@@ -235,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
                 switch (destination.getId()){
                     case R.id.eventListFragment:
+                    case R.id.myEventListFragment:
                         bottomNavigationView.setVisibility(View.GONE);
                         return;
                     case R.id.eventFragment:
@@ -302,9 +303,8 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId())
         {
             case R.id.nav_profile:
-//                Intent intent = new Intent(MainActivity.this,ProfileActivity.class);
-//                startActivity(intent);
-//                finish();
+                    navController.navigate(R.id.action_global_myEventListFragment);
+                drawerLayout.closeDrawers();
                 Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_findFriends:

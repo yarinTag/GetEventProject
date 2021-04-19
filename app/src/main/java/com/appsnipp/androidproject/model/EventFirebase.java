@@ -18,6 +18,7 @@ public class EventFirebase {
 
     private FirebaseDatabase database ;
     private DatabaseReference eventRef;
+    private DatabaseReference eventRef2;
     private List<Event> eventList ;
 
     private EventFirebase() {
@@ -59,7 +60,7 @@ public class EventFirebase {
     }
 
 
-    public void addEvent(final Event event, Model.AddEventListener listener) {
+    public void addEvent(final Event event, Model.EventListener listener) {
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         eventRef=database.getReference("EventList");
@@ -75,8 +76,13 @@ public class EventFirebase {
 
     }
 
-    public void updateEvent(Event event, Model.AddEventListener listener) {
-        addEvent(event,listener);
+    public void updateEvent(Event event, final Model.EventListener listener) {
+        addEvent(event, new Model.EventListener() {
+            @Override
+            public void onComplete() {
+                listener.onComplete();
+            }
+        });
     }
 
     public void getEvent(String id, Model.GetEventListener listener) {
@@ -86,5 +92,36 @@ public class EventFirebase {
 
     public void deleteEvent(Event event, Model.DeleteListener listener) {
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    }
+
+    public interface eventListListener{
+         void onComplete(List<Event> events);
+    }
+
+    public void getUserList(final eventListListener listener) {
+        eventRef = database.getReference("Users").child(UserModel.instance.getUser().getUserID()).child("EventList");
+        eventRef2 = database.getReference("EventList");
+        final List<Event> eventList = new ArrayList<>();
+
+        eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot s : snapshot.getChildren()) {
+                    String s1 = s.getValue(String.class);
+                    EventModel.instance.getEvent(s1, new EventModel.GetEventListener() {
+                        @Override
+                        public void onComplete(Event event) {
+                            eventList.add(event);
+                        }
+                    });
+                }
+                listener.onComplete(eventList);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

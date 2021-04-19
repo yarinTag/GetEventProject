@@ -22,7 +22,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -115,10 +119,20 @@ public class User implements Serializable {
 }
 class UserModel {
 
-    public final static Model instance = new Model();
+    public final static UserModel instance = new UserModel();
+
 
     UserModel(){
 
+    }
+
+    public String getUserId() {
+        String s = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        return s;
+    }
+
+    public User getUser() {
+        return UserFirebase.instance.getUser();
     }
 
     public void getAllUsers(final Model.GetAllUserListener listener) {
@@ -205,18 +219,45 @@ class UserFirebase {
 
     private ProgressDialog loadingBar;
     private FirebaseAuth mAuth;
+   public User user;
+    public static final UserFirebase instance = new UserFirebase();
+    private FirebaseDatabase database ;
+    private DatabaseReference eventRef;
 
-    public boolean UserIsConnected(){
+    public interface isConnectedListener{
+        void onComplete(boolean flag);
+    }
 
+    public UserFirebase() {
+        database = FirebaseDatabase.getInstance();
+    }
+
+
+
+    public void UserIsConnected(final isConnectedListener listener){
 
         //If the user has already logged in to the app, doesn't ask them to reconnect
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
+        final FirebaseUser userFire = FirebaseAuth.getInstance().getCurrentUser();
+        if (userFire != null) {
             // User is signed in
-            return true;
+            eventRef = database.getReference("Users").child(userFire.getUid());
+            eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    user = snapshot.getValue(User.class);
+                    user.setUserID(userFire.getUid());
+                    listener.onComplete(true);
+                }
 
-        }
-        return false;
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        }else
+            listener.onComplete(false);
+
     }
 
     public void getAllUsers(Model.GetAllUserListener listener) {
@@ -285,6 +326,10 @@ class UserFirebase {
 
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public void UserLogIn(String email, String password, final LoginActivity activity) {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -293,16 +338,34 @@ class UserFirebase {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
+
+
                 if (task.isSuccessful()){
                     //That means the current logged in user and now we need to check if the user dot is email is verified
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    final FirebaseUser userFire = FirebaseAuth.getInstance().getCurrentUser();
 
-                    if (user.isEmailVerified())
+                    eventRef = database.getReference("Users").child(userFire.getUid());
+                    eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            user = snapshot.getValue(User.class);
+                            user.setUserID(userFire.getUid());
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+
+                    if (userFire.isEmailVerified())
                     {
                         activity.UserIsConfig();
 
                     }else{
-                        user.sendEmailVerification();
+                        userFire.sendEmailVerification();
                         activity.UserIsNotConfig();
                     }
 

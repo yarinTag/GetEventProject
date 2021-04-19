@@ -8,6 +8,7 @@ import java.util.List;
 public class EventViewModel extends ViewModel {
 
     private LiveData<List<Event>> liveData;
+    private LiveData<List<Event>> liveDataUser;
 
     public void getData(final EventModel.GetAllLiveDataListener listener) {
 
@@ -23,6 +24,22 @@ public class EventViewModel extends ViewModel {
             listener.onComplete(liveData);
         }
     }
+
+    public void getUserData(final EventModel.GetAllLiveDataListener listener) {
+
+        if(liveDataUser==null) {
+            Model.instance.getEventsUser(new EventModel.GetAllLiveDataListener() {
+                @Override
+                public void onComplete(LiveData<List<Event>> data) {
+                    liveDataUser = data;
+                    listener.onComplete(liveDataUser);
+                }
+            });
+        }else {
+            listener.onComplete(liveDataUser);
+        }
+    }
+
 
     public interface RefreshEventListener{
         void onComplete();

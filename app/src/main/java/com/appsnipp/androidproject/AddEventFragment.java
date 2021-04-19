@@ -240,8 +240,8 @@ public class AddEventFragment extends Fragment {
 
     private void SavingPostInDataBase(String url , final savePostListener listener ) {
 
-        final Event event= new Event(postRandomName+currentUserId,eventName.getText().toString(),saveCurrentDate,eventDescription.getText().toString(),url,saveCurrentTime,parent.image);
-        Model.instance.addEvent(event, new Model.AddEventListener() {
+        final Event event= new Event(postRandomName+currentUserId,eventName.getText().toString(),saveCurrentDate,eventDescription.getText().toString(),url,saveCurrentTime,parent.image,currentUserId);
+        Model.instance.addEvent(event, new Model.EventListener() {
             @Override
             public void onComplete() {
                 Toast.makeText(parent, "Event is updated successfully", Toast.LENGTH_SHORT).show();

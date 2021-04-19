@@ -54,6 +54,9 @@ interface EventDao {
     @Query("SELECT * FROM Event\n"+
             "WHERE Event.eventID=:eventId")
     Event getEvent(String eventId);
+
+    @Query("select * from Event WHERE Event.userId=:userId")
+    LiveData<List<Event>> getEventsUser(String userId);
 }
 
 
@@ -69,8 +72,15 @@ public class Event implements Serializable {
     private String eventDate;
     private String eventImg;
     private String userImg;
+    private String userId;
 
+    public String getUserId() {
+        return userId;
+    }
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public Event() {
     }
@@ -83,7 +93,7 @@ public class Event implements Serializable {
         this.userImg = userImg;
     }
 
-    public Event(String eventID, String eventName, String eventTime, String eventDetails, String eventImg, String eventDate,String userImg) {
+    public Event(String eventID, String eventName, String eventTime, String eventDetails, String eventImg, String eventDate,String userImg ,String userId) {
         this.eventName=eventName;
         this.eventID=eventID;
         this.eventTime=eventTime;
@@ -91,6 +101,7 @@ public class Event implements Serializable {
         this.eventImg = eventImg;
         this.eventDate = eventDate;
         this.userImg = userImg;
+        this.userId = userId;
     }
 
     @NonNull

@@ -1,7 +1,5 @@
 package com.appsnipp.androidproject.model;
 
-import android.view.View;
-
 import androidx.lifecycle.LiveData;
 
 import com.appsnipp.androidproject.LoginActivity;
@@ -55,9 +53,16 @@ public class Model {
     public void delete(User user, DeleteListener listener) {
         userFirebase.deleteUser(user,listener);
     }
-
-    public boolean UserIsConnected() {
-        return userFirebase.UserIsConnected();
+    public interface isConnectedListener{
+        void onComplete(boolean flag);
+    }
+    public void UserIsConnected(final isConnectedListener listener) {
+         userFirebase.UserIsConnected(new UserFirebase.isConnectedListener() {
+            @Override
+            public void onComplete(boolean flag) {
+                listener.onComplete(flag);
+            }
+        });
     }
 
 
@@ -85,12 +90,12 @@ public class Model {
 
     }
 
-    public interface AddEventListener{
+    public interface EventListener {
         void onComplete();
     }
-    public void addEvent(final Event event, final AddEventListener listener){
+    public void addEvent(final Event event, final EventListener listener){
 
-        eventModel.addEvent(event, new AddEventListener() {
+        eventModel.addEvent(event, new EventListener() {
             @Override
             public void onComplete() {
                 listener.onComplete();
@@ -98,7 +103,7 @@ public class Model {
         });
     }
 
-    public interface DeleteEventListener extends AddEventListener{}
+    public interface DeleteEventListener extends EventListener {}
     public void delete(Event event, DeleteListener listener) {
         EventFirebase.instance.deleteEvent(event,listener);
     }
@@ -106,10 +111,29 @@ public class Model {
     public interface GetEventListener {
         void onComplete();
     }
-    public void getEvent(Event event,GetEventListener listener) {
-        EventFirebase.instance.getEvent(event.getEventID(), listener);
-        eventModel.getEvent(event,listener);
+
+    public void getEventsUser(final EventModel.GetAllLiveDataListener listener) {
+        eventModel.getAllEventsUser(new EventModel.GetAllLiveDataListener() {
+            @Override
+            public void onComplete(LiveData<List<Event>> data) {
+                listener.onComplete(data);
+            }
+        });
     }
+
+//    public void getEvent(Event event,GetEventListener listener) {
+//        EventFirebase.instance.getEvent(event.getEventID(), listener);
+//        eventModel.getEvent(event,listener);
+//    }
 //    public interface deleteEventListener {
 //    }
+
+    public void updateEvent (Event event, final EventListener listener) {
+        eventModel.updateEvent(event, new EventModel.UpdateListener() {
+            @Override
+            public void onComplete() {
+                listener.onComplete();
+            }
+        });
+    }
 }

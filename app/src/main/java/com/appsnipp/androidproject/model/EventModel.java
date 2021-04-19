@@ -1,19 +1,19 @@
 package com.appsnipp.androidproject.model;
 
 import android.os.AsyncTask;
-import android.os.Build;
 
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class EventModel {
 
     public final static EventModel instance = new EventModel();
     public List<Event> data = new ArrayList<>();
+     public Event event;
 
     EventModel(){
 
@@ -25,6 +25,17 @@ public class EventModel {
     public interface GetAllLiveDataListener{
         void onComplete(LiveData<List<Event>> data);
     }
+
+
+
+    public void getAllEventsUser(final GetAllLiveDataListener listener) {
+        LiveData<List<Event>> liveData = (LiveData<List<Event>>) AppLocalDb.db.eventDao().getEventsUser(UserModel.instance.getUserId());
+//        refreshMyEvents(null);
+        listener.onComplete(liveData);
+    }
+
+
+
     public void refreshMyEvents(final GetAllEventListener listener) {
         EventFirebase.instance.getAllEvent(new Model.GetAllEventListener() {
             @Override
@@ -69,8 +80,8 @@ public class EventModel {
     public interface AddEventListener{
         void onComplete();
     }
-    public void addEvent(final Event event, final Model.AddEventListener listener){
-        EventFirebase.instance.addEvent(event, new Model.AddEventListener() {
+    public void addEvent(final Event event, final Model.EventListener listener){
+        EventFirebase.instance.addEvent(event, new Model.EventListener() {
             @Override
             public void onComplete() {
 
@@ -120,13 +131,15 @@ public class EventModel {
     }
 
     public interface GetEventListener{
-        void onComplete();
+        void onComplete(Event event);
     }
-    public void getEvent(final Event event, final Model.GetEventListener listener){
+
+    public void getEvent(final String eventId, final GetEventListener listener){
+
         class MyAsyncTask extends AsyncTask {
             @Override
             protected Object doInBackground(Object[] objects) {
-                AppLocalDb.db.eventDao().getEvent(event.getEventID());
+                event = AppLocalDb.db.eventDao().getEvent(eventId);
                 return null;
             }
 
@@ -134,12 +147,43 @@ public class EventModel {
             protected void onPostExecute(Object o) {
                 super.onPostExecute(o);
                 if(listener!= null){
-                    listener.onComplete();
+                    listener.onComplete(event);
                 }
             }
         };
         MyAsyncTask task= new MyAsyncTask();
         task.execute();
+    }
+
+    public interface UpdateListener{
+        void onComplete();
+    }
+
+    public void updateEvent(final Event event, final UpdateListener listener){
+        EventFirebase.instance.updateEvent(event, new Model.EventListener() {
+            @Override
+            public void onComplete() {
+                class MyAsyncTask extends AsyncTask {
+
+                    @Override
+                    protected Object doInBackground(Object[] objects) {
+                        AppLocalDb.db.eventDao().insertAll(event);
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Object o) {
+                        super.onPostExecute(o);
+                        if(listener!= null){
+                            listener.onComplete();
+                        }
+                    }
+                };
+                MyAsyncTask task= new MyAsyncTask();
+                task.execute();
+            }
+        });
+
     }
 
 }
