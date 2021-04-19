@@ -46,11 +46,20 @@ public class Model {
 
     //Event
 
-    public interface GetAllEventListener extends Listener<List<Event>>{}
-    public void getAllEvent(GetAllEventListener listener) {
-     //   EventFirebase.instance.getAllEvent(listener);
+    public interface GetAllEventListener {
+        void onComplete(List<Event> data);
+    }
+    public void getAllEvent(final GetAllEventListener listener) {
+
         //add from firebase to locoldb
-        eventModel.getAllEvents(listener);
+        eventModel.getAllEvents(new EventModel.GetAllEventListener() {
+            @Override
+            public void onComplete(List<Event> data) {
+                listener.onComplete(data);
+            }
+        });
+
+
     }
 
     public interface AddEventListener{

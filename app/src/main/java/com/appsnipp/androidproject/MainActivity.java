@@ -100,12 +100,16 @@ public class MainActivity extends AppCompatActivity {
         loadingBar = new ProgressDialog(this);
 
 
-        userRef.addValueEventListener(new ValueEventListener() {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String image ="";
                 if (snapshot.exists()){
                     fullName = snapshot.child("fullName").getValue().toString();
-                    String image = snapshot.child("profileImage").getValue().toString();
+                    if (snapshot.child("profileImage").getValue() != null) {
+
+                        image = snapshot.child("profileImage").getValue().toString();
+                    }
                     navProfileUserName.setText(fullName);
                     if (!image.equals("")) {
                         Picasso.get().load(image).placeholder(R.drawable.photo).into(navProfileUserImage);
@@ -171,13 +175,14 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()){
 
                     case R.id.navigation_home:
+                        item.setChecked(true);
                         if(!currentFragment.equals("navigation_home")){
                             currentFragment = "navigation_home";
                             //NavDirection
-                            NavDirections navDirections= EventFragmentDirections.actionEventFragmentToEventListFragment2();
-                            navController.navigate(navDirections);
+//                            NavDirections navDirections= EventFragmentDirections.actionEventFragmentToEventListFragment2();
+                            navController.navigate(R.id.action_global_eventListFragment2);
                         }
-                        return  false;
+                        return  true;
                     case R.id.participant_event:
                         if(!currentFragment.equals("participant_event")){
                             currentFragment = "participant_event";
@@ -186,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.add_event:
                         Toast.makeText(MainActivity.this, "fefwefew", Toast.LENGTH_SHORT).show();
+                        item.setChecked(true);
                         if (!currentFragment.equals("add_text")){
                             currentFragment = "add_text";
 //                            navController.navigate(R.id.action_eventListFragment_to_addEventFragment);
@@ -193,12 +199,13 @@ public class MainActivity extends AppCompatActivity {
 
                         return false;
                     case R.id.event_shopping:
+                        item.setChecked(true);
                         if(!currentFragment.equals("event_shopping")){
                             currentFragment = "event_shopping";
                             NavDirections navDirections= EventFragmentDirections.actionEventFragmentToShoppingListFragment(currentEventId);
                             navController.navigate(navDirections);
                             }
-                        return false;
+                        return true;
                     case R.id.chore_event:
                         if(!currentFragment.equals("chore_event")){
                             currentFragment = "chore_event";

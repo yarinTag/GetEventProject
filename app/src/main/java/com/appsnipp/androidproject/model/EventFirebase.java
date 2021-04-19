@@ -29,21 +29,22 @@ public class EventFirebase {
 // ...
 
         eventRef = database.getReference("EventList");
-        eventList = new ArrayList<>();
+        final List<Event> eventList2 = new ArrayList<>();
         eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot s: snapshot.getChildren()) {
                     Event event = s.getValue(Event.class);
-                    eventList.add( event);
-
+                    eventList2.add( event);
                 }
-                listener.onComplete(eventList);
+                eventList = eventList2;
+                listener.onComplete(eventList2);
 
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                listener.onComplete(eventList);
 
             }
         });
@@ -64,11 +65,13 @@ public class EventFirebase {
         eventRef=database.getReference("EventList");
         eventRef.child(event.getEventID()).setValue(event);
 
-        addUserToEvent(event.getEventID(),mAuth.getCurrentUser().getUid());
+        database.getReference("Users").child(mAuth.getCurrentUser().getUid()).child("EventList").child(event.getEventID()).setValue(event.getEventID());
+
+//        addUserToEvent(event.getEventID(),mAuth.getCurrentUser().getUid());
 //        database.getReference("Users").child(mAuth.getCurrentUser().getUid()).child("EventList").child(event.getEventID()).setValue(event.getEventID());
 
 
-        listener.onComplete();
+         listener.onComplete();
 
     }
 

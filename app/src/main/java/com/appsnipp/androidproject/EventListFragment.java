@@ -55,7 +55,7 @@ public class EventListFragment extends Fragment {
         final View view =  inflater.inflate(R.layout.fragment_event_list, container, false);
 
 
-        EventFirebase.instance.getAllEvent(new Model.GetAllEventListener() {
+        Model.instance.getAllEvent(new Model.GetAllEventListener() {
             @Override
             public void onComplete(List<Event> result) {
 

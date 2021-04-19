@@ -1,5 +1,6 @@
 package com.appsnipp.androidproject;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -57,6 +58,7 @@ public class AddEventFragment extends Fragment {
     private Button cancelBtn;
     private EditText eventName;
     private EditText eventDate;
+    private MainActivity parent;
     private EditText eventDescription;
     private Spinner spinnerEvent;
     private String receivedSize;
@@ -75,8 +77,15 @@ public class AddEventFragment extends Fragment {
     String[] subject = {" ","birthday","house Party","sit In The House","party"};
     private static final int Gallery_pic =1;
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        parent = (MainActivity) getActivity();
+    }
+
     public AddEventFragment() {
         // Required empty public constructor
+
         this.position = 0;
     }
 
@@ -142,17 +151,20 @@ public class AddEventFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                ValidateEventInfo();
+                if (ValidateEventInfo()) {
+                    FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
+                    String uid = null;
+                    if(user !=null){
+                        uid = user.getUid();
+                    }
 
-                FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
-                String uid = null;
-                if(user !=null){
-                    uid = user.getUid();
+                    //move to the eventDetails
+
+                    Navigation.findNavController(v).popBackStack();
+
                 }
 
-                //move to the eventDetails
 
-                Navigation.findNavController(v).popBackStack();
 
 
             }
@@ -169,19 +181,27 @@ public class AddEventFragment extends Fragment {
         return view;
     }
 
-    private void ValidateEventInfo() {
+    private boolean ValidateEventInfo() {
 
         description = eventDescription.getText().toString();
         nameEvent = eventName.getText().toString();
 
-        if (imageUri == null)
-            Toast.makeText(getActivity(), "Please select Event image !!", Toast.LENGTH_SHORT).show();
-        if (TextUtils.isEmpty(description))
-            Toast.makeText(getActivity(), "Please fill the description box !!", Toast.LENGTH_SHORT).show();
-        if (TextUtils.isEmpty(nameEvent))
-            Toast.makeText(getActivity(), "Please choose event name !!", Toast.LENGTH_SHORT).show();
-        else
+        if (imageBitmap == null) {
+            Toast.makeText(parent, "Please select Event image !!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (TextUtils.isEmpty(description)) {
+            Toast.makeText(parent, "Please fill the description box !!", Toast.LENGTH_SHORT).show();
+            eventDescription.setError("Please fill the description box");
+            return false;
+        }
+        if (TextUtils.isEmpty(nameEvent)) {
+            Toast.makeText(parent, "Please choose event name !!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
             StoringImageToFireBaseStorage();
+        return true;
 
     }
 
@@ -220,7 +240,7 @@ public class AddEventFragment extends Fragment {
         Model.instance.addEvent(event, new Model.AddEventListener() {
             @Override
             public void onComplete() {
-                Toast.makeText(getContext(), "Event is updated successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(parent, "Event is updated successfully", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -237,7 +257,7 @@ public class AddEventFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+
 
         if (requestCode==Gallery_pic && resultCode==RESULT_OK && data!=null){
             imageUri = data.getData();
@@ -256,5 +276,6 @@ public class AddEventFragment extends Fragment {
             selectEventImage.setImageURI(imageUri);
 
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

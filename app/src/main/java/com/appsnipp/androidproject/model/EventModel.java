@@ -1,14 +1,18 @@
 package com.appsnipp.androidproject.model;
 
 import android.os.AsyncTask;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class EventModel {
 
     public final static EventModel instance = new EventModel();
-    public List<Event> data = new LinkedList<>();
+    public List<Event> data = new ArrayList<>();
 
     EventModel(){
 
@@ -16,22 +20,27 @@ public class EventModel {
     public interface GetAllEventListener{
         void onComplete(List<Event> data);
     }
-    public void getAllEvents(final Model.GetAllEventListener listener) {
+    public void getAllEvents(final GetAllEventListener listener) {
         EventFirebase.instance.getAllEvent(new Model.GetAllEventListener() {
             @Override
             public void onComplete(final List<Event> result) {
-                 final List<Event> data=result;
+                final List<Event> data =result;
                 class MyAsyncTask extends AsyncTask {
                     @Override
-                    public Object doInBackground(Object[] objects) {
+                    protected Object doInBackground(Object[] objects) {
 //                        AppLocalDb.db.eventDao().insertAll((Event) data);
+//                        data.forEach( e ->AppLocalDb.db.eventDao().insertAll( (e));
+//                        for(Event e : data) {
+//                            AppLocalDb.db.eventDao().insertAll((e));
+//                        }
                         return null;
                     }
 
                     @Override
-                    public void onPostExecute(Object o) {
+                    protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
-                        listener.onComplete(data);
+
+                        listener.onComplete( data);
                     }
                 }
 
