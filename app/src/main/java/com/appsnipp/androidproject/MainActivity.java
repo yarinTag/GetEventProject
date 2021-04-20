@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(MainActivity.this, "Fucked up", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
         menuToolbar = findViewById(R.id.main_page_toolbar);
         setSupportActionBar(menuToolbar);
-        getSupportActionBar().setTitle("home");
+        getSupportActionBar().setTitle("Home");
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(MainActivity.this,drawerLayout,R.string.drawer_open,R.string.drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -230,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
@@ -237,12 +237,24 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.eventListFragment:
                     case R.id.myEventListFragment:
                         bottomNavigationView.setVisibility(View.GONE);
+                        menuToolbar.setVisibility(View.VISIBLE);
+
                         return;
+                    case  R.id.addEventFragment:
+                    case  R.id.clickMyEventFragment:
+                        bottomNavigationView.setVisibility(View.GONE);
+                        menuToolbar.setVisibility(View.GONE);
+                        return;
+
                     case R.id.eventFragment:
                         bottomNavigationView.setVisibility(View.VISIBLE);
+                        menuToolbar.setVisibility(View.VISIBLE);
+
                         return;
                     default:
                         bottomNavigationView.setVisibility(View.VISIBLE);
+                        menuToolbar.setVisibility(View.VISIBLE);
+
                 }
             }
         });
@@ -307,15 +319,13 @@ public class MainActivity extends AppCompatActivity {
                 drawerLayout.closeDrawers();
                 Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.nav_findFriends:
-                Toast.makeText(this, "Find Friends", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.nav_settings:
-                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
-                break;
             case R.id.nav_logout:
                 mAuth.signOut();
                 SendUserToLoginPage();
+                break;
+            case R.id.nav_home:
+                navController.navigate(R.id.action_global_eventListFragment2);
+                drawerLayout.closeDrawers();
                 break;
         }
     }

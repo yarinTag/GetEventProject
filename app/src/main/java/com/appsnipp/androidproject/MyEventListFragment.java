@@ -38,6 +38,7 @@ public class MyEventListFragment extends Fragment implements SwipeRefreshLayout.
     EventViewModel viewModel;
     LiveData<List<Event>> liveData;
     SwipeRefreshLayout refreshLayout ;
+    MainActivity parent;
 
     @Override
     public void onRefresh() {
@@ -63,6 +64,7 @@ public class MyEventListFragment extends Fragment implements SwipeRefreshLayout.
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         viewModel = new ViewModelProvider(this).get(EventViewModel.class);
+        parent= (MainActivity) getActivity();
     }
 
     @Override
@@ -70,7 +72,7 @@ public class MyEventListFragment extends Fragment implements SwipeRefreshLayout.
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view =  inflater.inflate(R.layout.fragment_event_list, container, false);
-
+        parent.getSupportActionBar().setTitle("My Events List");
         refreshLayout = view.findViewById(R.id.refresh);
         refreshLayout.setOnRefreshListener(this);
 
@@ -104,10 +106,8 @@ public class MyEventListFragment extends Fragment implements SwipeRefreshLayout.
         adapter.setOnClickListener(new EventAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-//                NavDirections navDirections= MyEventListFragmentDirections.actionGlobalMyEventListFragment();
-//                Navigation.findNavController(container).navigate(navDirections);
-                MyEventListFragmentDirections.ActionMyEventListFragmentToClickMyEventFragment blabl = MyEventListFragmentDirections.actionMyEventListFragmentToClickMyEventFragment("need to find out", "Blala", "www.google.com");
-                Navigation.findNavController(container).navigate(blabl);
+                MyEventListFragmentDirections.ActionMyEventListFragmentToClickMyEventFragment event = MyEventListFragmentDirections.actionMyEventListFragmentToClickMyEventFragment(eventList.get(position));
+                Navigation.findNavController(container).navigate(event);
 
             }
         });
@@ -116,9 +116,9 @@ public class MyEventListFragment extends Fragment implements SwipeRefreshLayout.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String size=""+eventList.size();
-                NavDirections navDirections= EventListFragmentDirections.actionEventListFragmentToAddEventFragment(size);
-                Navigation.findNavController(v).navigate(navDirections);
+//                NavDirections navDirections= EventListFragmentDirections.actionEventListFragmentToAddEventFragment(size);
+                Navigation.findNavController(v).navigate(R.id.action_global_addEventFragment);
+
             }
         });
 

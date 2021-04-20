@@ -239,21 +239,22 @@ class UserFirebase {
         //If the user has already logged in to the app, doesn't ask them to reconnect
         final FirebaseUser userFire = FirebaseAuth.getInstance().getCurrentUser();
         if (userFire != null) {
+            listener.onComplete(true);
             // User is signed in
-            eventRef = database.getReference("Users").child(userFire.getUid());
-            eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    user = snapshot.getValue(User.class);
-                    user.setUserID(userFire.getUid());
-                    listener.onComplete(true);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
+//            eventRef = database.getReference("Users").child(userFire.getUid());
+//            eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    user = snapshot.getValue(User.class);
+//                    user.setUserID(userFire.getUid());
+//                    listener.onComplete(true);
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
 
         }else
             listener.onComplete(false);

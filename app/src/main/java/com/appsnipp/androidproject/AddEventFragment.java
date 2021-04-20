@@ -51,7 +51,6 @@ public class AddEventFragment extends Fragment {
     private MainActivity parent;
     private EditText eventDescription;
     private Spinner spinnerEvent;
-    private String receivedSize;
     private Uri imageUri;
     private String currentUserId;
 
@@ -128,12 +127,6 @@ public class AddEventFragment extends Fragment {
         saveBtn = view.findViewById(R.id.SaveAddEventBtn);
         cancelBtn = view.findViewById(R.id.CancelAddEventBtn);
 
-        Bundle bundle = this.getArguments();
-        if (bundle != null){
-            //Key default value
-            receivedSize = bundle.getString("size","0");
-        }
-
 
         selectEventImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +145,7 @@ public class AddEventFragment extends Fragment {
                     public void onComplete(boolean ifSave) {
                         if(ifSave) {
                             //move to the eventDetails
-                            Navigation.findNavController(view).popBackStack();
+                            Navigation.findNavController(view).navigateUp();
 
                         }
                     }
@@ -240,7 +233,7 @@ public class AddEventFragment extends Fragment {
 
     private void SavingPostInDataBase(String url , final savePostListener listener ) {
 
-        final Event event= new Event(postRandomName+currentUserId,eventName.getText().toString(),saveCurrentDate,eventDescription.getText().toString(),url,saveCurrentTime,parent.image,currentUserId);
+        Event event= new Event(postRandomName+currentUserId,eventName.getText().toString(),saveCurrentDate,eventDescription.getText().toString(),url,saveCurrentTime,parent.image,currentUserId, System.currentTimeMillis());
         Model.instance.addEvent(event, new Model.EventListener() {
             @Override
             public void onComplete() {

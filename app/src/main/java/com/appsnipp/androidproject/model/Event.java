@@ -13,13 +13,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.LinkedList;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 import androidx.room.Dao;
@@ -28,14 +29,8 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.appsnipp.androidproject.EventListFragment;
 import com.appsnipp.androidproject.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -73,6 +68,17 @@ public class Event implements Serializable {
     private String eventImg;
     private String userImg;
     private String userId;
+    private Long lastUpdate;
+
+
+
+    public Long getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Long lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 
     public String getUserId() {
         return userId;
@@ -93,7 +99,7 @@ public class Event implements Serializable {
         this.userImg = userImg;
     }
 
-    public Event(String eventID, String eventName, String eventTime, String eventDetails, String eventImg, String eventDate,String userImg ,String userId) {
+    public Event(String eventID, String eventName, String eventTime, String eventDetails, String eventImg, String eventDate,String userImg ,String userId,Long lastUpdate) {
         this.eventName=eventName;
         this.eventID=eventID;
         this.eventTime=eventTime;
@@ -102,6 +108,7 @@ public class Event implements Serializable {
         this.eventDate = eventDate;
         this.userImg = userImg;
         this.userId = userId;
+        this.lastUpdate=lastUpdate;
     }
 
     @NonNull

@@ -25,9 +25,6 @@
         <action
             android:id="@+id/action_addEventFragment_to_eventListFragment"
             app:destination="@id/eventListFragment" />
-        <argument
-            android:name="size"
-            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/shoppingListFragment"
@@ -74,13 +71,8 @@
         android:label="fragment_click_my_event"
         tools:layout="@layout/fragment_click_my_event" >
         <argument
-            android:name="eventName"
-            app:argType="string" />
-        <argument
-            android:name="eventDescription"
-            app:argType="string" />
-        <argument
-            android:name="eventImg"
-            app:argType="string" />
+            android:name="Event"
+            app:argType="com.appsnipp.androidproject.model.Event" />
     </fragment>
+    <action android:id="@+id/action_global_addEventFragment" app:destination="@id/addEventFragment" />
 </navigation>

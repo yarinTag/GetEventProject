@@ -2,22 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/nav_home"
+        android:title="Home"
+        android:icon="@drawable/logout_24"
+        />
+    <item
         android:id="@+id/nav_profile"
         android:title="Profile"
         android:icon="@drawable/profile_24"
         />
 
-    <item
-        android:id="@+id/nav_findFriends"
-        android:title="Find Friends"
-        android:icon="@drawable/add_friend"
-        />
-
-    <item
-        android:id="@+id/nav_settings"
-        android:title="Settings"
-        android:icon="@drawable/settings_24"
-        />
 
     <item
         android:id="@+id/nav_logout"

@@ -1,9 +1,15 @@
 package com.appsnipp.androidproject.model;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.provider.SyncStateContract;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
+import com.appsnipp.androidproject.MyApplication;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -14,7 +20,8 @@ public class EventModel {
     public final static EventModel instance = new EventModel();
     public List<Event> data = new ArrayList<>();
      public Event event;
-
+    Long lastUpdate;
+    SharedPreferences sp;
     EventModel(){
 
     }
@@ -30,14 +37,16 @@ public class EventModel {
 
     public void getAllEventsUser(final GetAllLiveDataListener listener) {
         LiveData<List<Event>> liveData = (LiveData<List<Event>>) AppLocalDb.db.eventDao().getEventsUser(UserModel.instance.getUserId());
-//        refreshMyEvents(null);
+       refreshMyEvents(null);
         listener.onComplete(liveData);
     }
 
 
 
     public void refreshMyEvents(final GetAllEventListener listener) {
-        EventFirebase.instance.getAllEvent(new Model.GetAllEventListener() {
+        sp = MyApplication.context.getSharedPreferences("TAG", Context.MODE_PRIVATE);
+        lastUpdate= sp.getLong("lastupdated",0);
+        EventFirebase.instance.getAllEvent(lastUpdate,new Model.GetAllEventListener() {
             @Override
             public void onComplete(final List<Event> result) {
                 final List<Event> data =result;
@@ -48,7 +57,15 @@ public class EventModel {
 //                        data.forEach( e ->AppLocalDb.db.eventDao().insertAll( (e));
                         for(Event e : data) {
                             AppLocalDb.db.eventDao().insertAll((e));
+                            if(e.getLastUpdate()>lastUpdate){
+                                lastUpdate=e.getLastUpdate();
+                            }
                         }
+                        SharedPreferences.Editor editor= sp.edit();
+                        editor.putLong("lastupdated",lastUpdate);
+                        editor.commit();
+
+
                         return null;
                     }
 
@@ -111,23 +128,29 @@ public class EventModel {
         void onComplete();
     }
     public void deleteEvent(final Event event, final Model.DeleteListener listener){
-        class MyAsyncTask extends AsyncTask {
+        EventFirebase.instance.DeleteEvent(event, new Model.DeleteListener() {
             @Override
-            protected Object doInBackground(Object[] objects) {
-                AppLocalDb.db.eventDao().delete(event);
-                return null;
-            }
+            public void onComplete() {
+                class MyAsyncTask extends AsyncTask {
+                    @Override
+                    protected Object doInBackground(Object[] objects) {
+                        AppLocalDb.db.eventDao().delete(event);
+                        return null;
+                    }
 
-            @Override
-            protected void onPostExecute(Object o) {
-                super.onPostExecute(o);
-                if(listener!= null){
-                    listener.onComplete();
-                }
+                    @Override
+                    protected void onPostExecute(Object o) {
+                        super.onPostExecute(o);
+                        if(listener!= null){
+                            listener.onComplete();
+                        }
+                    }
+                };
+                MyAsyncTask task= new MyAsyncTask();
+                task.execute();
             }
-        };
-        MyAsyncTask task= new MyAsyncTask();
-        task.execute();
+        });
+
     }
 
     public interface GetEventListener{

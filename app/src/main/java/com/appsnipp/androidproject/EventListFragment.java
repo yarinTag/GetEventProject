@@ -44,6 +44,7 @@ public class EventListFragment extends Fragment implements SwipeRefreshLayout.On
     EventViewModel viewModel;
     LiveData<List<Event>> liveData;
     SwipeRefreshLayout refreshLayout ;
+    MainActivity parent;
 
     @Override
     public void onRefresh() {
@@ -62,20 +63,20 @@ public class EventListFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
     public EventListFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         viewModel = new ViewModelProvider(this).get(EventViewModel.class);
+        parent= (MainActivity) getActivity();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         final View view =  inflater.inflate(R.layout.fragment_event_list, container, false);
+        parent.getSupportActionBar().setTitle("Home");
 
         refreshLayout = view.findViewById(R.id.refresh);
         refreshLayout.setOnRefreshListener(this);
@@ -97,17 +98,7 @@ public class EventListFragment extends Fragment implements SwipeRefreshLayout.On
 
 
 
-//        Model.instance.getAllEvent(new Model.GetAllEventListener() {
-//            @Override
-//            public void onComplete(List<Event> result) {
-//
-//                eventList = result;
-//                adapter.setList(eventList);
-//            }
-//        });
-
         rv = view.findViewById(R.id.eventListFrag);
-//        rv.hasFixedSize();
         rv.setHasFixedSize(true);
 
 
@@ -115,11 +106,8 @@ public class EventListFragment extends Fragment implements SwipeRefreshLayout.On
         rv.setLayoutManager(layoutManager);
 
         adapter = new EventAdapter();
-//        adapter.setList(eventList);
         rv.setAdapter(adapter);
-//        if (adapter.getItemCount() != 0 ){
-//            reloadData();
-//        }
+
 
         adapter.setOnClickListener(new EventAdapter.OnItemClickListener() {
             @Override
@@ -133,9 +121,8 @@ public class EventListFragment extends Fragment implements SwipeRefreshLayout.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String size=""+eventList.size();
-                NavDirections navDirections= EventListFragmentDirections.actionEventListFragmentToAddEventFragment(size);
-                Navigation.findNavController(v).navigate(navDirections);
+                Navigation.findNavController(v).navigate(R.id.action_global_addEventFragment);
+
             }
         });
 

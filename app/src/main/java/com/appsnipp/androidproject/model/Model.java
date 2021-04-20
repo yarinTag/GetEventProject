@@ -104,8 +104,13 @@ public class Model {
     }
 
     public interface DeleteEventListener extends EventListener {}
-    public void delete(Event event, DeleteListener listener) {
-        EventFirebase.instance.deleteEvent(event,listener);
+    public void deleteEvent(Event event, final DeleteListener listener) {
+        eventModel.instance.deleteEvent(event, new DeleteListener() {
+            @Override
+            public void onComplete() {
+                listener.onComplete();
+            }
+        });
     }
 
     public interface GetEventListener {

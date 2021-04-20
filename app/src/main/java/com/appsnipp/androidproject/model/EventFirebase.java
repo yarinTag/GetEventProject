@@ -2,14 +2,18 @@ package com.appsnipp.androidproject.model;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class EventFirebase {
@@ -25,13 +29,13 @@ public class EventFirebase {
         database = FirebaseDatabase.getInstance();
     }
 
-    public void getAllEvent(final Model.GetAllEventListener listener) {
+    public void getAllEvent(Long lastUpdate, final Model.GetAllEventListener listener) {
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 // ...
 
         eventRef = database.getReference("EventList");
         final List<Event> eventList2 = new ArrayList<>();
-        eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        eventRef.orderByChild("lastUpdate").startAt(lastUpdate).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot s: snapshot.getChildren()) {
@@ -65,8 +69,7 @@ public class EventFirebase {
         database = FirebaseDatabase.getInstance();
         eventRef=database.getReference("EventList");
         eventRef.child(event.getEventID()).setValue(event);
-
-        database.getReference("Users").child(mAuth.getCurrentUser().getUid()).child("EventList").child(event.getEventID()).setValue(event.getEventID());
+//        database.getReference("Users").child(mAuth.getCurrentUser().getUid()).child("EventList").child(event.getEventID()).setValue(event.getEventID());
 
 //        addUserToEvent(event.getEventID(),mAuth.getCurrentUser().getUid());
 //        database.getReference("Users").child(mAuth.getCurrentUser().getUid()).child("EventList").child(event.getEventID()).setValue(event.getEventID());
@@ -90,8 +93,10 @@ public class EventFirebase {
 
     }
 
-    public void deleteEvent(Event event, Model.DeleteListener listener) {
-        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+    public void DeleteEvent(Event event, Model.DeleteListener listener) {
+        database.getReference("EventList").child(event.getEventID()).removeValue();
+        listener.onComplete();
     }
 
     public interface eventListListener{
