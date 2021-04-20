@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".ClickMyEventFragment">
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_below="@+id/eventNameView"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:src="@android:drawable/ic_menu_gallery" />
+
+    <TextView
+        android:id="@+id/Description_view"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_below="@id/imageView"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="23dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="Description"
+        android:textAlignment="gravity"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/eventNameView"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="Event Name"
+        android:textAlignment="center"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/editPost_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/Description_view"
+        android:layout_marginTop="7dp"
+        android:background="#3665F4"
+        android:shadowColor="#643E6A"
+        android:text="Update"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/deleteEvent_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editPost_btn"
+        android:layout_marginTop="8dp"
+        android:background="#DA1E1E"
+        android:text="Delete"
+        android:textSize="24sp" />
+</RelativeLayout>

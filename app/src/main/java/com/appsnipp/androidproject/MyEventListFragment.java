@@ -104,8 +104,11 @@ public class MyEventListFragment extends Fragment implements SwipeRefreshLayout.
         adapter.setOnClickListener(new EventAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                NavDirections navDirections= MyEventListFragmentDirections.actionGlobalMyEventListFragment();
-                Navigation.findNavController(container).navigate(navDirections);
+//                NavDirections navDirections= MyEventListFragmentDirections.actionGlobalMyEventListFragment();
+//                Navigation.findNavController(container).navigate(navDirections);
+                MyEventListFragmentDirections.ActionMyEventListFragmentToClickMyEventFragment blabl = MyEventListFragmentDirections.actionMyEventListFragmentToClickMyEventFragment("need to find out", "Blala", "www.google.com");
+                Navigation.findNavController(container).navigate(blabl);
+
             }
         });
         FloatingActionButton fab = view.findViewById(R.id.addEventBtn);

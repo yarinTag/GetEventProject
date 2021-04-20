@@ -63,5 +63,24 @@
     <fragment
         android:id="@+id/myEventListFragment"
         android:name="com.appsnipp.androidproject.MyEventListFragment"
-        android:label="MyEventListFragment" /><action android:id="@+id/action_global_myEventListFragment" app:destination="@id/myEventListFragment"/>
+        android:label="MyEventListFragment" >
+        <action
+            android:id="@+id/action_myEventListFragment_to_clickMyEventFragment"
+            app:destination="@id/clickMyEventFragment" />
+    </fragment><action android:id="@+id/action_global_myEventListFragment" app:destination="@id/myEventListFragment"/>
+    <fragment
+        android:id="@+id/clickMyEventFragment"
+        android:name="com.appsnipp.androidproject.ClickMyEventFragment"
+        android:label="fragment_click_my_event"
+        tools:layout="@layout/fragment_click_my_event" >
+        <argument
+            android:name="eventName"
+            app:argType="string" />
+        <argument
+            android:name="eventDescription"
+            app:argType="string" />
+        <argument
+            android:name="eventImg"
+            app:argType="string" />
+    </fragment>
 </navigation>
