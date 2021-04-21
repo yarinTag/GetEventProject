@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.LinkedList;
 import java.util.List;
 
-import Adapter.EventAdapter;
+import com.appsnipp.androidproject.Adapter.EventAdapter;
 
 
 public class MyEventListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -76,7 +75,7 @@ public class MyEventListFragment extends Fragment implements SwipeRefreshLayout.
         refreshLayout = view.findViewById(R.id.refresh);
         refreshLayout.setOnRefreshListener(this);
 
-        viewModel.getUserData(new EventModel.GetAllLiveDataListener() {
+        viewModel.getUserData(parent.user.getUserID(),new EventModel.GetAllLiveDataListener() {
             @Override
             public void onComplete(LiveData<List<Event>> data) {
                 liveData = data;

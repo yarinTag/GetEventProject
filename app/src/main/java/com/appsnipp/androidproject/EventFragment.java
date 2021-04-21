@@ -1,4 +1,4 @@
-package com.appsnipp.androidproject.model;
+package com.appsnipp.androidproject;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.appsnipp.androidproject.MainActivity;
 import com.appsnipp.androidproject.R;
+import com.appsnipp.androidproject.model.Event;
 
 public class EventFragment extends Fragment {
 

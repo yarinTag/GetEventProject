@@ -131,10 +131,10 @@ class UserModel {
 
     }
 
-    public String getUserId() {
-        String s = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        return s;
-    }
+//    public String getUserId() {
+//        String s = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        return s;
+//    }
 
     public static void login(String email, String password, LoginActivity loginActivity, final Model.isConnectedListener listener) {
         UserFirebase.instance.UserLogIn(email, password, loginActivity, new Model.isConnectedListener() {
@@ -145,82 +145,12 @@ class UserModel {
         });
     }
 
-    public void getAllUsers(final Model.GetAllUserListener listener) {
-        class MyAsyncTask extends AsyncTask {
-            List<User> data=new LinkedList<User>();
-
-            @Override
-            public Object doInBackground(Object[] objects) {
-                data = AppLocalDb.db.userDao().getAll();
-                return data;
-            }
-
-            @Override
-            public void onPostExecute(Object o) {
-                super.onPostExecute(o);
-                listener.onComplete(data);
-            }
-        }
-
-        MyAsyncTask task = new MyAsyncTask();
-        task.execute();
-    }
-
-    public interface GetAllUserListener{
-        void onComplete(List<User> data);
-    }
     public User getUser() {
         User s = UserFirebase.instance.getUser();
         return s;
     }
 
 
-    public interface AddUserListener{
-        void onComplete();
-    }
-    public void addUser(final User user, final Model.AddUserListener listener){
-        class MyAsyncTask extends AsyncTask {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                AppLocalDb.db.userDao().insertAll(user);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                super.onPostExecute(o);
-                if(listener!= null){
-                    listener.onComplete();
-                }
-            }
-        };
-        MyAsyncTask task= new MyAsyncTask();
-        task.execute();
-    }
-
-
-    public interface deleteUserListener{
-        void onComplete();
-    }
-    public void deleteUser(final User user, final Model.DeleteListener listener){
-        class MyAsyncTask extends AsyncTask {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                AppLocalDb.db.userDao().delete(user);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                super.onPostExecute(o);
-                if(listener!= null){
-                    listener.onComplete();
-                }
-            }
-        };
-        MyAsyncTask task= new MyAsyncTask();
-        task.execute();
-    }
 
 
 
@@ -242,7 +172,9 @@ class UserFirebase {
         mAuth = FirebaseAuth.getInstance();
     }
 
-
+    public void UpdateImg(String url,String userId){
+        database.getReference("Users").child(userId).child("profileImage").setValue(url);
+    }
 
     FirebaseUser userFire;
 

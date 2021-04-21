@@ -8,8 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -22,15 +24,18 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.appsnipp.androidproject.model.EventViewModel;
+import com.appsnipp.androidproject.model.Model;
 import com.appsnipp.androidproject.model.Product;
-import com.appsnipp.androidproject.model.ProductFireBase;
+import com.appsnipp.androidproject.model.ProductModel;
+import com.appsnipp.androidproject.model.ProductViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.appsnipp.androidproject.Adapter.ShoppingListAdapter;
 
 public class ShoppingListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
@@ -39,36 +44,56 @@ public class ShoppingListFragment extends Fragment implements SwipeRefreshLayout
    private List<Product> list;
    private ShoppingListAdapter adapter;
    private FloatingActionButton addBtn;
-   public MainActivity mainActivity;
+    ProductViewModel viewModel;
+    LiveData<List<Product>> liveData;
     SwipeRefreshLayout refreshLayout ;
+    MainActivity parent;
+    String eventId;
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        viewModel = new ViewModelProvider(this).get(ProductViewModel.class);
+        parent= (MainActivity) getActivity();
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_shopping_list, container, false);
-
+        //parent= this.getParentFragment();
+        eventId=parent.currentEventId;
         shoppingListRV = view.findViewById(R.id.rv_shopping_list);
         searchSV = view.findViewById(R.id.sv_search);
-
+        parent.getSupportActionBar().setTitle("?????");
         shoppingListRV.setHasFixedSize(true);
         shoppingListRV.setLayoutManager(new LinearLayoutManager(getActivity()));
         refreshLayout = view.findViewById(R.id.refresh);
+        new ItemTouchHelper(ItemTouchHelperCallback).attachToRecyclerView(shoppingListRV);
+
 
 //        initData();
 
         list=new ArrayList<>();
         adapter = new ShoppingListAdapter(getActivity(), list);
-        ProductFireBase.instance.GetAllProduct(mainActivity.currentEventId, new ProductFireBase.ProductListListener() {
-            @Override
-            public void onSucceed(List<Product> products) {
-                list=products;
-                adapter.setData(list);
-            }
-        });
 
-        //adapter
+                viewModel.getData(eventId, new ProductModel.GetAllLiveDataListener() {
+                            @Override
+                            public void onComplete(LiveData<List<Product>> data) {
+                                liveData = data;
+                                liveData.observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
+                                    @Override
+                                    public void onChanged(List<Product> products) {
+
+                                        list = products;
+                                        adapter.setList(products);
+                                    }
+                                });
+                                //adapter
+                            }
+                        });
 
         shoppingListRV.setAdapter(adapter);
 
@@ -113,11 +138,6 @@ public class ShoppingListFragment extends Fragment implements SwipeRefreshLayout
         return view;
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        mainActivity= (MainActivity) getActivity();
-    }
 
     private void init (View view){
 
@@ -127,18 +147,13 @@ public class ShoppingListFragment extends Fragment implements SwipeRefreshLayout
         shoppingListRV.setHasFixedSize(true);
         shoppingListRV.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        refreshLayout = view.findViewById(R.id.refresh);
+        refreshLayout.setOnRefreshListener(this);
+
 //        initData();
 
         list=new ArrayList<>();
         adapter = new ShoppingListAdapter(getActivity(), list);
-        ProductFireBase.instance.GetAllProduct(mainActivity.currentEventId, new ProductFireBase.ProductListListener() {
-            @Override
-            public void onSucceed(List<Product> products) {
-                list=products;
-                adapter.setData(list);
-            }
-        });
-
         //adapter
 
         shoppingListRV.setAdapter(adapter);
@@ -159,7 +174,7 @@ public class ShoppingListFragment extends Fragment implements SwipeRefreshLayout
     EditText description;
 
     public void addProductDialog(){
-        final Dialog dialog1 = new Dialog(mainActivity);
+        final Dialog dialog1 = new Dialog(parent);
         dialog1.setContentView(R.layout.my_dialog);
         dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
@@ -185,22 +200,14 @@ public class ShoppingListFragment extends Fragment implements SwipeRefreshLayout
                     return;
                 }
 
-                Product product = new Product(productName,productQ,false,mainActivity.fullName);
-                ProductFireBase.instance.NewProduct(product, mainActivity.currentEventId, new ProductFireBase.ProductListener() {
+                Product product = new Product(productName,productQ,false,parent.user.getFullName(), System.currentTimeMillis(),parent.currentEventId);
+                Model.instance.NewProduct(product, parent.currentEventId, new Model.ProductListener() {
                     @Override
-                    public void onSucceed() {
-                        ProductFireBase.instance.GetAllProduct(mainActivity.currentEventId, new ProductFireBase.ProductListListener() {
-                            @Override
-                            public void onSucceed(List<Product> products) {
-                                list=products;
-                                adapter.setData(list);
-                                dialog1.cancel();
-                            }
-                        });
-
-
+                    public void onComplete() {
+                        dialog1.cancel();
                     }
                 });
+
             }
         });
         Button cancelButton=dialog1.findViewById(R.id.cancelButton);
@@ -214,41 +221,74 @@ public class ShoppingListFragment extends Fragment implements SwipeRefreshLayout
         window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
         dialog1.show();
 
-
-
-
-
-
-    }
-    private void initData(){
-
-        list=  new ArrayList<>();
-        for(int i = 0; i < 10; i++){
-
-            Product p = new Product();
-            p.setProductName("item " + i +  "");
-            p.setProductQuantity(i + "");
-
-            list.add(p);
-        }
-
-        Product p1 = new Product();
-        p1.setProductName("yarin");
-        p1.setProductQuantity(String.valueOf(4));
-        list.add(p1);
     }
 
 
     @Override
     public void onRefresh() {
-
         refreshLayout.setRefreshing(true);
-//        viewModel.refresh(new EventViewModel.RefreshEventListener() {
-//            @Override
-//            public void onComplete() {
-//                refreshLayout.setRefreshing(false);
-//            }
-//        });}
+        viewModel.refresh(eventId,new ProductViewModel.RefreshEventListener(){
+            @Override
+            public void onComplete() {
+                refreshLayout.setRefreshing(false);
+            }
+        });
     }
+
+    ItemTouchHelper.SimpleCallback ItemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
+
+
+            Button yes_btn;
+            Button cancel_btn;
+            TextView delete_txt;
+
+            final Dialog dialog2 = new Dialog(parent);
+            dialog2.setContentView(R.layout.delete_dialog);
+            dialog2.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            Window window = dialog2.getWindow();
+            window.setGravity(Gravity.CENTER);
+
+            cancel_btn = dialog2.findViewById(R.id.cancel_btn);
+            yes_btn = dialog2.findViewById(R.id.yes_btn);
+            delete_txt = dialog2.findViewById(R.id.delete_txt);
+
+
+            yes_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Product product = list.get(viewHolder.getAdapterPosition());
+                    Model.instance.deleteProduct(product, eventId, new Model.DeleteProductListener(){
+                        @Override
+                        public void onComplete() {
+                            dialog2.cancel();
+                        }
+                    });
+
+                }
+            });
+            cancel_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    adapter.notifyDataSetChanged();
+                    dialog2.cancel();
+                }
+            });
+
+
+            dialog2.setCancelable(false);
+            window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+            dialog2.show();
+
+
+        }
+    };
+
 
 }

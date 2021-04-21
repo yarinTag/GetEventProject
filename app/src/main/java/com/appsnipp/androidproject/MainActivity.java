@@ -20,17 +20,13 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 
 
-import com.appsnipp.androidproject.model.Event;
-import com.appsnipp.androidproject.model.EventFragmentDirections;
+
 import com.appsnipp.androidproject.model.ImageModel;
 import com.appsnipp.androidproject.model.Model;
 import com.appsnipp.androidproject.model.User;
@@ -40,7 +36,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -48,8 +43,6 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -142,19 +135,19 @@ public class MainActivity extends AppCompatActivity {
                         galleryIntent.setType("image/*");
                         startActivityForResult(galleryIntent,Gallery_pic);
 
-                if(userRef.child("profileImage").getKey().isEmpty()) {
-                    userRef.child("profileImage").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot)
-                        {
-                            Picasso.get().load(snapshot.getValue().toString()).placeholder(R.drawable.photo).into(navProfileUserImage);
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
+//                if(userRef.child("profileImage").getKey().isEmpty()) {
+//                    userRef.child("profileImage").addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot snapshot)
+//                        {
+//                            Picasso.get().load(snapshot.getValue().toString()).placeholder(R.drawable.photo).into(navProfileUserImage);
+//                        }
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError error) {
+//
+//                        }
+//                    });
+//                }
             }
         });
 
@@ -195,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.participant_event:
                         if(!currentFragment.equals("participant_event")){
                             currentFragment = "participant_event";
-                            //NavDirection
                         }
                         break;
                     case R.id.add_event:
@@ -203,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
                         item.setChecked(true);
                         if (!currentFragment.equals("add_text")){
                             currentFragment = "add_text";
-//                            navController.navigate(R.id.action_eventListFragment_to_addEventFragment);
                         }
 
                         return false;
@@ -218,14 +209,12 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.chore_event:
                         if(!currentFragment.equals("chore_event")){
                             currentFragment = "chore_event";
-                            //NavDirection
                         }
                         return false;
                 }
                 return false;
             }
         });
-//       NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -293,14 +282,16 @@ public class MainActivity extends AppCompatActivity {
             InputStream imageStream = null;
             try {
 
-                final Uri resultUri = result.getUri();
+                Uri resultUri = result.getUri();
                 imageStream = getContentResolver().openInputStream(resultUri);
                 imageBitmap = BitmapFactory.decodeStream(imageStream);
                 navProfileUserImage.setImageBitmap(imageBitmap);
-                ImageModel.uploadImage(imageBitmap, currentUserId, new ImageModel.Listener() {
+                ImageModel.uploadImage(imageBitmap, user.getUserID(), new ImageModel.Listener() {
                     @Override
                     public void onSuccess(String url) {
-                        userRef.child("profileImage").setValue(url);
+                        user.setProfileImage(url);
+                        Model.instance.UpdateImg(url,user.getUserID());
+                        Picasso.get().load(user.getProfileImage()).placeholder(R.drawable.photo).into(navProfileUserImage);
                         loadingBar.hide();
                     }
 

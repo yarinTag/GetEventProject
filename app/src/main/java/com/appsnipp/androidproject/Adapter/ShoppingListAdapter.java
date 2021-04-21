@@ -1,4 +1,4 @@
-package com.appsnipp.androidproject;
+package com.appsnipp.androidproject.Adapter;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.appsnipp.androidproject.R;
 import com.appsnipp.androidproject.model.Product;
 
 import java.util.List;
@@ -20,6 +21,11 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     private Activity mActivity;
 
 
+
+    public void setList(List<Product> products){
+        shoppingList=products;
+        notifyDataSetChanged();
+    }
 
     public ShoppingListAdapter(Activity activity, List<Product> list){
         this.mActivity = activity;

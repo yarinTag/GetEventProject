@@ -1,4 +1,4 @@
-package Adapter;
+package com.appsnipp.androidproject.Adapter;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -33,6 +33,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         this.activity = activity;
         this.productList = productList;
     }
+
+    public void setList(List<Product> products){
+        productList=products;
+        notifyDataSetChanged();
+    }
+
+
 
     @NonNull
     @Override

@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/eventFragment"
-        android:name="com.appsnipp.androidproject.model.EventFragment"
+        android:name="com.appsnipp.androidproject.EventFragment"
         android:label="fragment_event"
         tools:layout="@layout/fragment_event" >
         <argument

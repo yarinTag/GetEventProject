@@ -1,16 +1,14 @@
 package com.appsnipp.androidproject.model;
 
+
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
 public class EventViewModel extends ViewModel {
-
     private LiveData<List<Event>> liveData;
     private LiveData<List<Event>> liveDataUser;
-
     public void getData(final EventModel.GetAllLiveDataListener listener) {
 
         if(liveData==null) {
@@ -19,6 +17,7 @@ public class EventViewModel extends ViewModel {
                 public void onComplete(LiveData<List<Event>> data) {
                     liveData = data;
                     listener.onComplete(liveData);
+
                 }
             });
         }else {
@@ -26,10 +25,10 @@ public class EventViewModel extends ViewModel {
         }
     }
 
-    public void getUserData(final EventModel.GetAllLiveDataListener listener) {
+    public void getUserData(String userId,final EventModel.GetAllLiveDataListener listener) {
 
         if(liveDataUser==null) {
-            Model.instance.getEventsUser(new EventModel.GetAllLiveDataListener() {
+            Model.instance.getEventsUser(userId,new EventModel.GetAllLiveDataListener() {
                 @Override
                 public void onComplete(LiveData<List<Event>> data) {
                     liveDataUser = data;

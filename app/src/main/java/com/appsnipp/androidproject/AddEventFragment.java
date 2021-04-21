@@ -96,6 +96,8 @@ public class AddEventFragment extends Fragment {
         userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
         eventRef = FirebaseDatabase.getInstance().getReference().child("Events");
 
+
+
         view = inflater.inflate(R.layout.fragment_add_event, container, false);
 //        spinnerEvent = view.findViewById(R.id.event_subject);
 //        spinnerEvent.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -233,7 +235,7 @@ public class AddEventFragment extends Fragment {
 
     private void SavingPostInDataBase(String url , final savePostListener listener ) {
 
-        Event event= new Event(postRandomName+currentUserId,eventName.getText().toString(),saveCurrentDate,eventDescription.getText().toString(),url,saveCurrentTime,parent.image,currentUserId, System.currentTimeMillis(),false);
+        Event event= new Event(postRandomName+currentUserId,eventName.getText().toString(),saveCurrentDate,eventDescription.getText().toString(),url,saveCurrentTime,parent.user.getProfileImage(),currentUserId, System.currentTimeMillis(),false);
         Model.instance.addEvent(event, new Model.EventListener() {
             @Override
             public void onComplete() {

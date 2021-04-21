@@ -26,6 +26,8 @@
         android:src="@android:drawable/ic_menu_gallery" />
 
 
+
+
     <EditText
         android:id="@+id/addEventDescription"
         android:layout_width="match_parent"

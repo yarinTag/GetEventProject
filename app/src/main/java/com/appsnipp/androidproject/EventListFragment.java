@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -18,20 +17,17 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
+
 
 import com.appsnipp.androidproject.model.Event;
-import com.appsnipp.androidproject.model.EventFirebase;
 import com.appsnipp.androidproject.model.EventModel;
 import com.appsnipp.androidproject.model.EventViewModel;
-import com.appsnipp.androidproject.model.Model;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import Adapter.EventAdapter;
+import com.appsnipp.androidproject.Adapter.EventAdapter;
 
 
 public class EventListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -45,7 +41,6 @@ public class EventListFragment extends Fragment implements SwipeRefreshLayout.On
     LiveData<List<Event>> liveData;
     SwipeRefreshLayout refreshLayout ;
     MainActivity parent;
-
     @Override
     public void onRefresh() {
         refreshLayout.setRefreshing(true);
@@ -84,6 +79,7 @@ public class EventListFragment extends Fragment implements SwipeRefreshLayout.On
         viewModel.getData(new EventModel.GetAllLiveDataListener() {
             @Override
             public void onComplete(LiveData<List<Event>> data) {
+
                 liveData = data;
                 liveData.observe(getViewLifecycleOwner(), new Observer<List<Event>>() {
                     @Override

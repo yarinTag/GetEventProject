@@ -1,4 +1,4 @@
-package Adapter;
+package com.appsnipp.androidproject.Adapter;
 
 
 import android.view.LayoutInflater;
@@ -101,8 +101,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
             Picasso.get().load(event.getEventImg()).placeholder(R.drawable.photo).into(eventImg);
             Picasso.get().load(event.getUserImg()).placeholder(R.drawable.photo).into(profileImg);
-
-
 
         }
 

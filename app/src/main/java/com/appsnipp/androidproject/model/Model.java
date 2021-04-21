@@ -11,6 +11,9 @@ public class Model {
     UserFirebase userFirebase= new UserFirebase();
     EventModel eventModel= new EventModel();
 
+    public void UpdateImg(String url,String userId){
+        userFirebase.UpdateImg(url,userId);
+    }
 
 
     public interface isConnectedListener{
@@ -45,6 +48,10 @@ public class Model {
 
         });
     }
+    public interface RefreshProductsListener{
+        void onComplete();
+    }
+
 
     //User
     public interface Listener<T>{
@@ -133,8 +140,8 @@ public class Model {
         void onComplete();
     }
 
-    public void getEventsUser(final EventModel.GetAllLiveDataListener listener) {
-        eventModel.getAllEventsUser(new EventModel.GetAllLiveDataListener() {
+    public void getEventsUser(String userId,final EventModel.GetAllLiveDataListener listener) {
+        eventModel.getAllEventsUser(userId,new EventModel.GetAllLiveDataListener() {
             @Override
             public void onComplete(LiveData<List<Event>> data) {
                 listener.onComplete(data);
@@ -151,6 +158,57 @@ public class Model {
 
     public void updateEvent (Event event, final EventListener listener) {
         eventModel.updateEvent(event, new EventModel.UpdateListener() {
+            @Override
+            public void onComplete() {
+                listener.onComplete();
+            }
+        });
+    }
+
+
+    //Product
+    public interface ProductListListener{
+        void onComplete(LiveData<List<Product>> products);
+    }
+    public void GetAllProduct(String eventId,final ProductListListener listener) {
+            ProductModel.instance.getAllProductEvent(eventId, new ProductModel.GetAllLiveDataListener() {
+                @Override
+                public void onComplete(LiveData<List<Product>> data) {
+                    listener.onComplete(data);
+
+                }
+            });
+    }
+
+
+    public  interface ProductListener{
+        void onComplete();
+    }
+
+    public void NewProduct(Product p, String eventId,final ProductListener listener) {
+        ProductModel.instance.addProduct(p, eventId, new ProductModel.AddProductListener() {
+            @Override
+            public void onComplete() {
+                listener.onComplete();
+            }
+        });
+    }
+
+    public void RefreshMyProducts(String eventId,final RefreshProductsListener listener ) {
+
+        ProductModel.instance.refreshMyProducts(eventId, new ProductModel.GetAllProductListener() {
+            @Override
+            public void onComplete() {
+                listener.onComplete();
+            }
+        });
+    }
+
+    public interface DeleteProductListener {
+        void onComplete();
+    }
+    public void deleteProduct(Product product,String eventId, final DeleteProductListener listener) {
+        ProductModel.instance.deleteProduct(product, eventId, new ProductModel.deleteProductListener() {
             @Override
             public void onComplete() {
                 listener.onComplete();
