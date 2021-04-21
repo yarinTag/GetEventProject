@@ -206,7 +206,6 @@ class UserFirebase {
 
     public void getAllUsers(Model.GetAllUserListener listener) {
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
     }
 
 
@@ -222,36 +221,19 @@ class UserFirebase {
         mAuth.createUserWithEmailAndPassword(user.getEmail(),user.getPassword()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
 //                    final User user = new User(userList.size(),fullName,userEmail,userMobile);
+                        FirebaseDatabase.getInstance().getReference("Users").
+                                child(FirebaseAuth.getInstance().getCurrentUser()
+                                        .getUid()).setValue(user);
 
-                    FirebaseDatabase.getInstance().getReference("Users").
-                            child(FirebaseAuth.getInstance().getCurrentUser()
-                                    .getUid()).setValue(user)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-
-                                    if (task.isSuccessful()){
-                                        Log.d("TAG","User has been registered successfully");
-//                                        loadingBar.dismiss();
-//                                        loadingBar.setMessage("Check your Email . . . ");
-//                                        loadingBar.show();
-//                                        loadingBar.setCanceledOnTouchOutside(true);
-//                                        loadingBar.dismiss();
-                                    }else{
-                                        Log.d("TAG","User has not been registered");
-//                                        loadingBar.dismiss();
-
-                                    }
-                                }
-                            });
-                }else{
-                    Log.d("TAG","User has not been registered");
+                    } else {
+                        Log.d("TAG", "User has not been registered");
 //                    loadingBar.dismiss();
 
-                }
+                    }
             }
+
         });
 
     }
@@ -297,11 +279,12 @@ class UserFirebase {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            user = snapshot.getValue(User.class);
-                            user.setUserID(userFire.getUid());
+
 
                             if (userFire.isEmailVerified())
                             {
+                                user = snapshot.getValue(User.class);
+                                user.setUserID(userFire.getUid());
                                   listener.onComplete(true,user);
 
                             }else{

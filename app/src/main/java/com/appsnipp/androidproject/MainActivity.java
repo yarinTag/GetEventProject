@@ -97,8 +97,9 @@ public class MainActivity extends AppCompatActivity {
         navProfileUserImage = navView.findViewById(R.id.nav_profile_img);
         navProfileUserName = navView.findViewById(R.id.nav_user_name);
         navProfileUserName.setText(user.getFullName());
-        Picasso.get().load(user.getProfileImage()).placeholder(R.drawable.photo).into(navProfileUserImage);
-
+        if(!user.getProfileImage().equals("")) {
+            Picasso.get().load(user.getProfileImage()).placeholder(R.drawable.photo).into(navProfileUserImage);
+        }
 
         loadingBar = new ProgressDialog(this);
 
