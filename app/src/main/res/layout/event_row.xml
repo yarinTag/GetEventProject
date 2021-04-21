@@ -42,9 +42,8 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="8dp"
                 android:textAlignment="textStart"
-                android:textSize="16dp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textColor="@color/whiteTextColor"
                 />
 
             <LinearLayout
@@ -52,29 +51,34 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginLeft="5dp"
-                android:padding="2dp"
-                >
+                android:padding="2dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/text"
                     android:text="has been updated a event"
-                    android:textColor="@color/darkTextColor"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    />
+                    android:textColor="@color/whiteTextColor"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="5dp"
+                android:padding="2dp">
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/event_date"
                     android:text="Date"
-                    android:textColor="@color/darkTextColor"
+                    android:textColor="@color/whiteTextColor"
                     android:textSize="13sp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:textStyle="bold"
                     />
 
                 <TextView
@@ -82,12 +86,20 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/event_time"
                     android:text="Time"
-                    android:textColor="@color/darkTextColor"
+                    android:textColor="@color/whiteTextColor"
                     android:textSize="13sp"
-                    android:textStyle="bold"
                     />
 
+
+
+
+
+
             </LinearLayout>
+
+
+
+
 
         </LinearLayout>
 
@@ -102,18 +114,29 @@
             android:layout_marginRight="3dp"
             android:padding="3dp"
             android:textSize="14sp"
-            android:textColor="@color/black"
+            android:textColor="@color/whiteTextColor"
             />
 
-        <ImageView
-            android:id="@+id/event_img"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_margin="3dp"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
+            android:layout_margin="24dp"
+            app:cardCornerRadius="8dp"
+            android:src="@android:drawable/ic_menu_gallery">
 
-            />
+
+            <ImageView
+                android:id="@+id/event_img"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop" />
+
+        </androidx.cardview.widget.CardView>
+
+
+
+
     </LinearLayout>
 
 

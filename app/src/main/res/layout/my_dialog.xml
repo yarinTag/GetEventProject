@@ -25,14 +25,6 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:labelFor="@id/ratingBar"
-        android:text="Think necessary ?"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="@+id/guideline5" />
-
     <EditText
         android:id="@+id/name"
         android:layout_width="0dp"
@@ -121,14 +113,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_end="16dp" />
 
-    <RatingBar
-        android:id="@+id/ratingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:rating="3"
-        android:stepSize="1"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toTopOf="@+id/guideline5" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

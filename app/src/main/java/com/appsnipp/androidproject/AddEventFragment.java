@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -43,7 +44,7 @@ import static android.app.Activity.RESULT_OK;
 public class AddEventFragment extends Fragment {
 
     private int position;
-    private ImageButton selectEventImage;
+    private ImageView selectEventImage;
     private Button saveBtn;
     private Button cancelBtn;
     private EditText eventName;

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/register_bk_color"
     tools:context=".AddEventFragment">
 
 
@@ -14,16 +15,28 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
         android:hint="Event_Name"
+        android:layout_margin="16dp"
         android:padding="10dp" />
 
 
-    <ImageButton
-        android:id="@+id/imageButton"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView_image"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_marginTop="45dp"
-        android:scaleType="centerCrop"
-        android:src="@android:drawable/ic_menu_gallery" />
+        android:layout_marginTop="20dp"
+        android:layout_margin="24dp"
+        app:cardCornerRadius="8dp">
+
+
+        <ImageView
+            android:id="@+id/imageButton"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:scaleType="centerCrop"
+            android:src="@android:drawable/ic_menu_gallery"/>
+
+
+    </androidx.cardview.widget.CardView>
 
 
 
@@ -35,6 +48,7 @@
         android:layout_below="@+id/imageButton"
         android:layout_marginTop="39dp"
         android:hint="Description"
+        android:layout_margin="16dp"
         android:padding="15dp" />
 
 
@@ -52,6 +66,7 @@
             android:layout_margin="8dp"
             android:layout_weight="1"
             android:textSize="20sp"
+            android:background="@drawable/mybutton_update"
             android:text="Post Event" />
 
         <Button
@@ -61,7 +76,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:textSize="20sp"
-            android:text="Cancel" />
+            android:text="Cancel"
+            android:background="@drawable/mybutton_delete"/>
 
 
     </LinearLayout>
