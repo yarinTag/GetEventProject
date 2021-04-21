@@ -35,7 +35,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.appsnipp.androidproject.Adapter.ShoppingListAdapter;
+import Adapter.ShoppingListAdapter;
 
 public class ShoppingListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 

@@ -1,5 +1,6 @@
 package com.appsnipp.androidproject;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -27,7 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.appsnipp.androidproject.Adapter.EventAdapter;
+import Adapter.EventAdapter;
 
 
 public class EventListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {

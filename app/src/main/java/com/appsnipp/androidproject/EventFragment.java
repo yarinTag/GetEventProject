@@ -20,7 +20,6 @@ public class EventFragment extends Fragment {
     private MainActivity mainActivity;
 
     public EventFragment() {
-        // Required empty public constructor
     }
 
 
@@ -33,7 +32,6 @@ public class EventFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_event, container, false);
 
         Event event = EventFragmentArgs.fromBundle(getArguments()).getEvent();

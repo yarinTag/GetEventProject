@@ -1,4 +1,4 @@
-package com.appsnipp.androidproject.Adapter;
+package Adapter;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

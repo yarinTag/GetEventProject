@@ -59,7 +59,6 @@ public class AddEventFragment extends Fragment {
     private StorageReference eventImageReference;
     private FirebaseAuth mAuth;
     private DatabaseReference userRef,eventRef;
-//    private List<Product> productList;
     private String saveCurrentDate, saveCurrentTime,postRandomName,downloadUrl;
     View view;
 
@@ -79,7 +78,6 @@ public class AddEventFragment extends Fragment {
     }
 
     public AddEventFragment() {
-        // Required empty public constructor
 
         this.position = 0;
     }
@@ -87,7 +85,6 @@ public class AddEventFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         eventImageReference = FirebaseStorage.getInstance().getReference();
 

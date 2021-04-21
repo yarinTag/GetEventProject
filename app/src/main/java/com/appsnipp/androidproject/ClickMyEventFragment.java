@@ -157,7 +157,6 @@ public class ClickMyEventFragment extends Fragment {
             }
 
 
-            //eventImg.setImageURI(imageUri);
 
         }
         super.onActivityResult(requestCode, resultCode, data);

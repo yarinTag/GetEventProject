@@ -1,4 +1,4 @@
-package com.appsnipp.androidproject.Adapter;
+package Adapter;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.appsnipp.androidproject.R;
+import com.appsnipp.androidproject.model.Event;
 import com.appsnipp.androidproject.model.Product;
 
 import java.util.List;
