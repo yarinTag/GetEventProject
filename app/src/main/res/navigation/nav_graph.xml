@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_eventListFragment_to_eventFragment"
             app:destination="@id/eventFragment" />
+        <action
+            android:id="@+id/action_eventListFragment_to_shoppingListFragment7"
+            app:destination="@id/shoppingListFragment" />
     </fragment>
     <action android:id="@+id/action_global_eventListFragment2" app:destination="@id/eventListFragment" />
     <fragment
@@ -32,8 +35,8 @@
         android:label="fragment_shopping_list"
         tools:layout="@layout/fragment_shopping_list" >
         <argument
-            android:name="eventId"
-            app:argType="string" />
+            android:name="Event"
+            app:argType="com.appsnipp.androidproject.model.Event" />
         <action
             android:id="@+id/action_shoppingListFragment_to_myDialog"
             app:destination="@id/myDialog" />

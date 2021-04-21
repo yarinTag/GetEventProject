@@ -203,8 +203,8 @@ public class MainActivity extends AppCompatActivity {
                         item.setChecked(true);
                         if(!currentFragment.equals("event_shopping")){
                             currentFragment = "event_shopping";
-                            NavDirections navDirections= EventFragmentDirections.actionEventFragmentToShoppingListFragment(currentEventId);
-                            navController.navigate(navDirections);
+//                            NavDirections navDirections= EventFragmentDirections.actionEventFragmentToShoppingListFragment(currentEventId);
+//                            navController.navigate(navDirections);
                             }
                         return true;
                     case R.id.chore_event:
@@ -234,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (destination.getId()){
                     case R.id.eventListFragment:
                     case R.id.myEventListFragment:
+                    case R.id.shoppingListFragment:
                         bottomNavigationView.setVisibility(View.GONE);
                         menuToolbar.setVisibility(View.VISIBLE);
 

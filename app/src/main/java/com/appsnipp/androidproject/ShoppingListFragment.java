@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.appsnipp.androidproject.model.Event;
 import com.appsnipp.androidproject.model.Model;
 import com.appsnipp.androidproject.model.Product;
 import com.appsnipp.androidproject.model.ProductModel;
@@ -64,15 +65,16 @@ public class ShoppingListFragment extends Fragment implements SwipeRefreshLayout
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_shopping_list, container, false);
         //parent= this.getParentFragment();
-        eventId=parent.currentEventId;
         shoppingListRV = view.findViewById(R.id.rv_shopping_list);
         searchSV = view.findViewById(R.id.sv_search);
-        parent.getSupportActionBar().setTitle("?????");
+        parent.getSupportActionBar().setTitle("Event Shopping List");
         shoppingListRV.setHasFixedSize(true);
         shoppingListRV.setLayoutManager(new LinearLayoutManager(getActivity()));
         refreshLayout = view.findViewById(R.id.refresh);
         new ItemTouchHelper(ItemTouchHelperCallback).attachToRecyclerView(shoppingListRV);
-
+        Event event = EventFragmentArgs.fromBundle(getArguments()).getEvent();
+        parent.currentEventId = event.getEventID();
+        eventId=event.getEventID();
 
 //        initData();
 

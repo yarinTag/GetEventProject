@@ -109,7 +109,7 @@ public class EventListFragment extends Fragment implements SwipeRefreshLayout.On
         adapter.setOnClickListener(new EventAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                NavDirections navDirections= EventListFragmentDirections.actionEventListFragmentToEventFragment(eventList.get(position));
+                NavDirections navDirections= EventListFragmentDirections.actionEventListFragmentToShoppingListFragment7(eventList.get(position));
                 Navigation.findNavController(container).navigate(navDirections);
             }
         });
