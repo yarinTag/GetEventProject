@@ -12,9 +12,23 @@ public class Model {
     EventModel eventModel= new EventModel();
 
 
-    public void LoginIn(String email, String password, LoginActivity activity) {
 
-        userFirebase.UserLogIn(email,password,activity);
+    public interface isConnectedListener{
+        void onComplete(boolean flag,User user);
+    }
+
+    public User getUser(){
+        return UserModel.instance.getUser();
+    }
+
+    public void LoginIn(String email, String password, LoginActivity activity, final isConnectedListener listener) {
+
+        UserModel.login(email, password, activity, new Model.isConnectedListener() {
+            @Override
+            public void onComplete(boolean flag,User user) {
+                listener.onComplete(flag,user);
+            }
+        });
     }
 
     public interface RefreshEventListener{
@@ -53,14 +67,16 @@ public class Model {
     public void delete(User user, DeleteListener listener) {
         userFirebase.deleteUser(user,listener);
     }
-    public interface isConnectedListener{
-        void onComplete(boolean flag);
+
+    public void userLogOut() {
+        UserModel.instance.userLogOut();
     }
+
     public void UserIsConnected(final isConnectedListener listener) {
-         userFirebase.UserIsConnected(new UserFirebase.isConnectedListener() {
+         userFirebase.UserIsConnected(new Model.isConnectedListener() {
             @Override
-            public void onComplete(boolean flag) {
-                listener.onComplete(flag);
+            public void onComplete(boolean flag,User user) {
+                listener.onComplete(flag,user);
             }
         });
     }

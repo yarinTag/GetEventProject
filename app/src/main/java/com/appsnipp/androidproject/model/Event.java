@@ -37,7 +37,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 @Dao
 interface EventDao {
 
-    @Query("select * from Event ORDER BY eventTime,eventDate ")
+    @Query("select * from Event Where isDelete == 0 order by eventTime And eventDate ")
     LiveData<List<Event>> getAll();
 
     @Insert(onConflict= OnConflictStrategy.REPLACE)
@@ -50,7 +50,7 @@ interface EventDao {
             "WHERE Event.eventID=:eventId")
     Event getEvent(String eventId);
 
-    @Query("select * from Event WHERE Event.userId=:userId")
+    @Query("select * from Event Where Event.userId=:userId And isDelete==0 order by eventTime And eventDate ")
     LiveData<List<Event>> getEventsUser(String userId);
 }
 
@@ -69,6 +69,7 @@ public class Event implements Serializable {
     private String userImg;
     private String userId;
     private Long lastUpdate;
+    private boolean isDelete;
 
 
 
@@ -91,6 +92,14 @@ public class Event implements Serializable {
     public Event() {
     }
 
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
+    }
+
     public String getUserImg() {
         return userImg;
     }
@@ -99,7 +108,7 @@ public class Event implements Serializable {
         this.userImg = userImg;
     }
 
-    public Event(String eventID, String eventName, String eventTime, String eventDetails, String eventImg, String eventDate,String userImg ,String userId,Long lastUpdate) {
+    public Event(String eventID, String eventName, String eventTime, String eventDetails, String eventImg, String eventDate,String userImg ,String userId,Long lastUpdate,boolean isDelete) {
         this.eventName=eventName;
         this.eventID=eventID;
         this.eventTime=eventTime;
@@ -109,6 +118,7 @@ public class Event implements Serializable {
         this.userImg = userImg;
         this.userId = userId;
         this.lastUpdate=lastUpdate;
+        this.isDelete = isDelete;
     }
 
     @NonNull

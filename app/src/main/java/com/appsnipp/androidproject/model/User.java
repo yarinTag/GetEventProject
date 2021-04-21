@@ -1,9 +1,11 @@
 package com.appsnipp.androidproject.model;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.Display;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -121,6 +123,9 @@ class UserModel {
 
     public final static UserModel instance = new UserModel();
 
+    public void userLogOut() {
+        UserFirebase.instance.userLogOut();
+    }
 
     UserModel(){
 
@@ -131,8 +136,13 @@ class UserModel {
         return s;
     }
 
-    public User getUser() {
-        return UserFirebase.instance.getUser();
+    public static void login(String email, String password, LoginActivity loginActivity, final Model.isConnectedListener listener) {
+        UserFirebase.instance.UserLogIn(email, password, loginActivity, new Model.isConnectedListener() {
+            @Override
+            public void onComplete(boolean flag,User user) {
+                listener.onComplete(flag,user);
+            }
+        });
     }
 
     public void getAllUsers(final Model.GetAllUserListener listener) {
@@ -159,8 +169,9 @@ class UserModel {
     public interface GetAllUserListener{
         void onComplete(List<User> data);
     }
-    public void getAllUsers(final GetAllUserListener listener) {
-
+    public User getUser() {
+        User s = UserFirebase.instance.getUser();
+        return s;
     }
 
 
@@ -217,47 +228,47 @@ class UserModel {
 
 class UserFirebase {
 
+    public final static UserFirebase instance = new UserFirebase();
     private ProgressDialog loadingBar;
     private FirebaseAuth mAuth;
-   public User user;
-    public static final UserFirebase instance = new UserFirebase();
+    public User user = new User();
     private FirebaseDatabase database ;
     private DatabaseReference eventRef;
 
-    public interface isConnectedListener{
-        void onComplete(boolean flag);
-    }
+
 
     public UserFirebase() {
         database = FirebaseDatabase.getInstance();
+        mAuth = FirebaseAuth.getInstance();
     }
 
 
 
-    public void UserIsConnected(final isConnectedListener listener){
+    FirebaseUser userFire;
+
+    public void UserIsConnected(final Model.isConnectedListener listener){
 
         //If the user has already logged in to the app, doesn't ask them to reconnect
-        final FirebaseUser userFire = FirebaseAuth.getInstance().getCurrentUser();
+          userFire = mAuth.getCurrentUser();
         if (userFire != null) {
-            listener.onComplete(true);
-            // User is signed in
-//            eventRef = database.getReference("Users").child(userFire.getUid());
-//            eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    user = snapshot.getValue(User.class);
-//                    user.setUserID(userFire.getUid());
-//                    listener.onComplete(true);
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                }
-//            });
+             //User is signed in
+            eventRef = database.getReference("Users").child(userFire.getUid());
+            eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    user = snapshot.getValue(User.class);
+                    user.setUserID(userFire.getUid());
+                    listener.onComplete(true,user);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
 
         }else
-            listener.onComplete(false);
+            listener.onComplete(false,user);
 
     }
 
@@ -328,29 +339,43 @@ class UserFirebase {
     }
 
     public User getUser() {
+
         return user;
     }
 
-    public void UserLogIn(String email, String password, final LoginActivity activity) {
+    public void userLogOut() {
+        mAuth.signOut();
+    }
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    public void UserLogIn(String email, String password, final LoginActivity activity,final Model.isConnectedListener listener) {
+
 
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
-
-
                 if (task.isSuccessful()){
                     //That means the current logged in user and now we need to check if the user dot is email is verified
-                    final FirebaseUser userFire = FirebaseAuth.getInstance().getCurrentUser();
 
-                    eventRef = database.getReference("Users").child(userFire.getUid());
+                    String userId = mAuth.getUid();
+                    userFire = mAuth.getCurrentUser();
+
+                    eventRef = database.getReference("Users").child(userId);
                     eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                             user = snapshot.getValue(User.class);
                             user.setUserID(userFire.getUid());
+
+                            if (userFire.isEmailVerified())
+                            {
+                                  listener.onComplete(true,user);
+
+                            }else{
+                                userFire.sendEmailVerification();
+                                listener.onComplete(false,user);
+                            }
 
                         }
 
@@ -361,14 +386,6 @@ class UserFirebase {
                     });
 
 
-                    if (userFire.isEmailVerified())
-                    {
-                        activity.UserIsConfig();
-
-                    }else{
-                        userFire.sendEmailVerification();
-                        activity.UserIsNotConfig();
-                    }
 
                 }else{
                    activity.UserNotMatch();

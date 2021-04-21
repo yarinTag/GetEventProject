@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase;
 import com.appsnipp.androidproject.MyApplication;
 
 
-@Database(entities = {User.class,Event.class}, version = 9)
+@Database(entities = {User.class,Event.class}, version = 12)
 abstract class AppLocalDbRepository extends RoomDatabase {
     public abstract UserDao userDao();
     public abstract EventDao eventDao();

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -31,6 +32,8 @@ import androidx.navigation.ui.NavigationUI;
 import com.appsnipp.androidproject.model.Event;
 import com.appsnipp.androidproject.model.EventFragmentDirections;
 import com.appsnipp.androidproject.model.ImageModel;
+import com.appsnipp.androidproject.model.Model;
+import com.appsnipp.androidproject.model.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -75,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     public String currentEventId;
     public String fullName;
     public String image ="";
+    public User user;
 
 
     private String currentFragment = "";
@@ -85,44 +89,48 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        user = (User) getIntent().getSerializableExtra("user");
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view_drawer);
 
-
-        mAuth=FirebaseAuth.getInstance();
-        currentUserId = mAuth.getCurrentUser().getUid();
-        userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
+//
+//        mAuth=FirebaseAuth.getInstance();
+//        currentUserId = mAuth.getCurrentUser().getUid();
+//        userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
 
         //Show Background with user pic
         final View navView = navigationView.inflateHeaderView(R.layout.navigation_header);
         navProfileUserImage = navView.findViewById(R.id.nav_profile_img);
         navProfileUserName = navView.findViewById(R.id.nav_user_name);
+        navProfileUserName.setText(user.getFullName());
+        Picasso.get().load(user.getProfileImage()).placeholder(R.drawable.photo).into(navProfileUserImage);
+
 
         loadingBar = new ProgressDialog(this);
 
 
-        userRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    fullName = snapshot.child("fullName").getValue().toString();
-                    if (snapshot.child("profileImage").getValue() != null) {
-
-                        image = snapshot.child("profileImage").getValue().toString();
-                        navProfileUserName.setText(fullName);
-                        if (!image.equals("")) {
-                            Picasso.get().load(image).placeholder(R.drawable.photo).into(navProfileUserImage);
-                        }
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
+//        userRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if (snapshot.exists()){
+//                    fullName = snapshot.child("fullName").getValue().toString();
+//                    if (snapshot.child("profileImage").getValue() != null) {
+//
+//                        image = snapshot.child("profileImage").getValue().toString();
+//                        navProfileUserName.setText(fullName);
+//                        if (!image.equals("")) {
+//                            Picasso.get().load(image).placeholder(R.drawable.photo).into(navProfileUserImage);
+//                        }
+//                    }
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//            }
+//        });
 
         navProfileUserImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -315,12 +323,12 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId())
         {
             case R.id.nav_profile:
-                    navController.navigate(R.id.action_global_myEventListFragment);
+                navController.navigate(R.id.action_global_myEventListFragment);
                 drawerLayout.closeDrawers();
                 Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_logout:
-                mAuth.signOut();
+                Model.instance.userLogOut();
                 SendUserToLoginPage();
                 break;
             case R.id.nav_home:

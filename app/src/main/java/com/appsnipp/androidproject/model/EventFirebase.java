@@ -24,6 +24,7 @@ public class EventFirebase {
     private DatabaseReference eventRef;
     private DatabaseReference eventRef2;
     private List<Event> eventList ;
+    private FirebaseDatabase instance1;
 
     private EventFirebase() {
         database = FirebaseDatabase.getInstance();
@@ -68,6 +69,7 @@ public class EventFirebase {
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         eventRef=database.getReference("EventList");
+
         eventRef.child(event.getEventID()).setValue(event);
 //        database.getReference("Users").child(mAuth.getCurrentUser().getUid()).child("EventList").child(event.getEventID()).setValue(event.getEventID());
 
@@ -95,8 +97,10 @@ public class EventFirebase {
 
 
     public void DeleteEvent(Event event, Model.DeleteListener listener) {
-        database.getReference("EventList").child(event.getEventID()).removeValue();
+        database.getReference("EventList").child(event.getEventID()).child("delete").setValue(true);
+        database.getReference("EventList").child(event.getEventID()).child("lastUpdate").setValue(System.currentTimeMillis());
         listener.onComplete();
+
     }
 
     public interface eventListListener{

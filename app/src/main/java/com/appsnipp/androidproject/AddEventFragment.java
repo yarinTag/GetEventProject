@@ -233,7 +233,7 @@ public class AddEventFragment extends Fragment {
 
     private void SavingPostInDataBase(String url , final savePostListener listener ) {
 
-        Event event= new Event(postRandomName+currentUserId,eventName.getText().toString(),saveCurrentDate,eventDescription.getText().toString(),url,saveCurrentTime,parent.image,currentUserId, System.currentTimeMillis());
+        Event event= new Event(postRandomName+currentUserId,eventName.getText().toString(),saveCurrentDate,eventDescription.getText().toString(),url,saveCurrentTime,parent.image,currentUserId, System.currentTimeMillis(),false);
         Model.instance.addEvent(event, new Model.EventListener() {
             @Override
             public void onComplete() {

@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appsnipp.androidproject.model.Model;
-
+import com.appsnipp.androidproject.model.User;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -47,9 +48,10 @@ public class LoginActivity extends AppCompatActivity {
         //If the user has already logged in to the app, doesn't ask them to reconnect
          Model.instance.UserIsConnected(new Model.isConnectedListener() {
             @Override
-            public void onComplete(boolean flag) {
+            public void onComplete(boolean flag,User user) {
                 if(flag) {
-                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("user",user);
                     startActivity(intent);
                 }
             }
@@ -96,7 +98,21 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 //That means the current logged in user and now we need to check if the user dot is email is verified
-                Model.instance.LoginIn(email, password,loginActivity);
+                Model.instance.LoginIn(email, password, loginActivity, new Model.isConnectedListener() {
+                    @Override
+                    public void onComplete(boolean flag,User user) {
+                        if(flag) {
+
+
+                            Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                            Toast.makeText(LoginActivity.this, "Login in Successfully", Toast.LENGTH_SHORT).show();
+                            intent.putExtra("user",user);
+                            startActivity(intent);
+                        }else{
+                            UserIsNotConfig();
+                        }
+                    }
+                });
 
             }
         });
@@ -117,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
     public void UserIsConfig(){
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
         Toast.makeText(LoginActivity.this, "Login in Successfully", Toast.LENGTH_SHORT).show();
+
         startActivity(intent);
     }
 
@@ -130,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginClick(View View){
-        startActivity(new Intent(this,RegisterActivity.class));
+        startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
         overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
 
     }

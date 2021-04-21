@@ -1,5 +1,6 @@
 package com.appsnipp.androidproject;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -50,6 +51,8 @@ public class ClickMyEventFragment extends Fragment {
     View view;
     ImageButton backbtn;
     MainActivity parent;
+    private ProgressDialog loadingBar;
+
     public ClickMyEventFragment() {
         // Required empty public constructor
     }
@@ -71,6 +74,7 @@ public class ClickMyEventFragment extends Fragment {
         updateEvent = view.findViewById(R.id.editPost_btn);
         deleteEvent = view.findViewById(R.id.deleteEvent_btn);
         backbtn=view.findViewById(R.id.backbtn);
+        loadingBar = new ProgressDialog(parent);
 
         eventId = ClickMyEventFragmentArgs.fromBundle(getArguments()).getEvent();
 
@@ -93,13 +97,17 @@ public class ClickMyEventFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                loadingBar.setTitle(" My Event's");
+                loadingBar.setMessage("Please wait, while we updating your Event...");
+                loadingBar.show();
+
                 ValidateEventInfo(new AddEventFragment.savePostListener() {
                     @Override
                     public void onComplete(boolean ifSave) {
                         if(ifSave) {
                             //move to the eventDetails
-                            Navigation.findNavController(view).navigateUp();
-
+                                loadingBar.dismiss();
+                                Navigation.findNavController(view).navigateUp();
                         }
                     }
                 });
@@ -231,7 +239,7 @@ public class ClickMyEventFragment extends Fragment {
 
     private void SavingPostInDataBase(String url , final AddEventFragment.savePostListener listener ) {
 
-        final Event event= new Event(eventId.getEventID(),eventName.getText().toString(),saveCurrentDate,eventDescription.getText().toString(),url,saveCurrentTime,eventId.getUserImg(),eventId.getUserId(),null);
+        final Event event= new Event(eventId.getEventID(),eventName.getText().toString(),saveCurrentDate,eventDescription.getText().toString(),url,saveCurrentTime,eventId.getUserImg(),eventId.getUserId(),System.currentTimeMillis(),false);
         Model.instance.addEvent(event, new Model.EventListener() {
             @Override
             public void onComplete() {
