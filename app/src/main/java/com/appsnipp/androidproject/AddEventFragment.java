@@ -1,5 +1,6 @@
 package com.appsnipp.androidproject;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -55,6 +56,9 @@ public class AddEventFragment extends Fragment {
     private Uri imageUri;
     private String currentUserId;
 
+    ProgressDialog loadingBar ;
+
+
     private String description,nameEvent;
     private Bitmap imageBitmap;
     private StorageReference eventImageReference;
@@ -94,7 +98,7 @@ public class AddEventFragment extends Fragment {
         userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
         eventRef = FirebaseDatabase.getInstance().getReference().child("Events");
 
-
+        loadingBar = new ProgressDialog(getContext());
 
         view = inflater.inflate(R.layout.fragment_add_event, container, false);
 //        spinnerEvent = view.findViewById(R.id.event_subject);
@@ -143,11 +147,12 @@ public class AddEventFragment extends Fragment {
                 ValidateEventInfo(new savePostListener() {
                     @Override
                     public void onComplete(boolean ifSave) {
+
                         if(ifSave) {
                             //move to the eventDetails
                             Navigation.findNavController(view).navigateUp();
-
                         }
+
                     }
                 });
 

@@ -167,6 +167,7 @@ class UserFirebase {
 
 
 
+
     public UserFirebase() {
         database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -213,6 +214,8 @@ class UserFirebase {
     public void addUser(final User user, Model.AddUserListener listener) {
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
+
+
 //        loadingBar.setTitle("Creating New Account");
 //        loadingBar.setMessage("Please wait, while we are creating your new Account. . . ");
 //        loadingBar.show();
@@ -226,6 +229,8 @@ class UserFirebase {
                         FirebaseDatabase.getInstance().getReference("Users").
                                 child(FirebaseAuth.getInstance().getCurrentUser()
                                         .getUid()).setValue(user);
+//                        loadingBar.dismiss();
+
 
                     } else {
                         Log.d("TAG", "User has not been registered");

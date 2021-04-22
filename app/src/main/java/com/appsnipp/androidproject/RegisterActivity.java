@@ -39,7 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     boolean flag;
 
-    ProgressDialog loadingBar;
+    ProgressDialog loadingBar ;
 
     List<User> userList= new LinkedList<User>();
 
@@ -111,9 +111,14 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     final User user = new User(fullName,userEmail,userMobile,userPassword,userImage);
+                loadingBar.setTitle("Creating New Account");
+                loadingBar.setMessage("Please wait, while we are creating your new Account. . . ");
+                loadingBar.show();
+                loadingBar.setCanceledOnTouchOutside(true);
                 Model.instance.addUser(user,new Model.AddUserListener() {
                     @Override
                     public void onComplete() {
+                        loadingBar.dismiss();
                     }
                 });
 

@@ -1,5 +1,6 @@
 package com.appsnipp.androidproject;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 
@@ -34,6 +35,8 @@ public class LoginActivity extends AppCompatActivity {
     private RelativeLayout relativeLayout;
     private LoginActivity loginActivity;
 
+    ProgressDialog loadingBar ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,11 +47,15 @@ public class LoginActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_login);
 
+        loadingBar = new ProgressDialog(this);
+
+
         loginActivity = this;
         //If the user has already logged in to the app, doesn't ask them to reconnect
          Model.instance.UserIsConnected(new Model.isConnectedListener() {
             @Override
             public void onComplete(boolean flag,User user) {
+
                 if(flag) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("user",user);
@@ -101,13 +108,18 @@ public class LoginActivity extends AppCompatActivity {
                 Model.instance.LoginIn(email, password, loginActivity, new Model.isConnectedListener() {
                     @Override
                     public void onComplete(boolean flag,User user) {
+                        loadingBar.setTitle("Try to Log in");
+                        loadingBar.setMessage("Please wait, while we are let you In. . . ");
+                        loadingBar.show();
+                        loadingBar.setCanceledOnTouchOutside(true);
                         if(flag) {
-
 
                             Intent intent = new Intent(getBaseContext(), MainActivity.class);
                             Toast.makeText(LoginActivity.this, "Login in Successfully", Toast.LENGTH_SHORT).show();
                             intent.putExtra("user",user);
                             startActivity(intent);
+                            loadingBar.dismiss();
+
                         }else{
                             UserIsNotConfig();
                         }

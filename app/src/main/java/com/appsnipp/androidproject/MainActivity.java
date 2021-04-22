@@ -104,27 +104,7 @@ public class MainActivity extends AppCompatActivity {
         loadingBar = new ProgressDialog(this);
 
 
-//        userRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if (snapshot.exists()){
-//                    fullName = snapshot.child("fullName").getValue().toString();
-//                    if (snapshot.child("profileImage").getValue() != null) {
-//
-//                        image = snapshot.child("profileImage").getValue().toString();
-//                        navProfileUserName.setText(fullName);
-//                        if (!image.equals("")) {
-//                            Picasso.get().load(image).placeholder(R.drawable.photo).into(navProfileUserImage);
-//                        }
-//                    }
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//            }
-//        });
+
 
         navProfileUserImage.setOnClickListener(new View.OnClickListener() {
             @Override
