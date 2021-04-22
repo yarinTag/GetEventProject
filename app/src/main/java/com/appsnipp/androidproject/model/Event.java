@@ -47,7 +47,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 @Dao
 interface EventDao {
 
-    @Query("select * from Event Where isDelete == 0 order by eventTime And eventDate ")
+    @Query("select * from Event Where isDelete == 0 order by eventTime And eventDate desc")
     LiveData<List<Event>> getAll();
 
     @Insert(onConflict= OnConflictStrategy.REPLACE)

@@ -318,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_profile:
                 navController.navigate(R.id.action_global_myEventListFragment);
                 drawerLayout.closeDrawers();
-                Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "My Events", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_logout:
                 Model.instance.userLogOut();
